@@ -21,10 +21,10 @@
       >
         <v-container fill-height>
           <v-layout align-center>
-            <strong class="display-4 font-weight-regular mr-4">5</strong>
+            <strong class="display-4 font-weight-regular mr-4">{{today.date()}}</strong>
             <v-layout column justify-end>
-              <div class="headline font-weight-light">Friday</div>
-              <div class="text-uppercase font-weight-light">March 2019</div>
+              <div class="headline font-weight-light">{{today.format("ddd")}}</div>
+              <div class="text-uppercase font-weight-light">{{today.format("MMMM YYYY")}}</div>
             </v-layout>
           </v-layout>
         </v-container>
@@ -50,31 +50,24 @@
 </template>
 
 <script>
+import moment from "moment";
+import { db } from "../firebase";
+const param = 0;
 export default {
   data: () => ({
-    tasks: [
-      {
-        color: "green",
-        time: "22:00",
-        title: "주짱구의 라이브",
-        desc: "주짱구의 라이브",
-        cast: "주시은"
-      },
-      {
-        color: "amber",
-        time: "22:00",
-        title: "배성재의 텐",
-        desc: "막나가는 용한 상담소",
-        cast: "배성재, 스님"
-      },
-      {
-        color: "pink",
-        time: "23:00",
-        title: "춘트리밍",
-        desc: "담소 오픈! (베타ver.) | 나미춘 스트리밍",
-        cast: "윤태진"
-      }
-    ]
-  })
+    today: moment().add(param, "days"),
+    tommorow: moment().add(param + 1, "days"),
+    tasks: []
+  }),
+  firestore() {
+    return {
+      tasks: db
+        .collection("TASK")
+        .where("date", ">=", this.$data.today.format("YYYY-MM-DD"))
+        .where("date", "<", this.$data.tommorow.format("YYYY-MM-DD"))
+        .orderBy("date")
+        .orderBy("time")
+    };
+  }
 };
 </script>

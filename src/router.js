@@ -31,6 +31,12 @@ export default new Router({
       name: "task",
       component: Task
     },
+    {
+      path: "/task/:id",
+      name: "taskDetail",
+      props: true,
+      component: AddTask
+    },
 
     {
       path: "/addTask",

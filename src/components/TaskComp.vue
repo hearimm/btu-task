@@ -14,7 +14,7 @@
         </v-toolbar>
         <v-list three-line>
           <template v-for="item in tasks">
-            <v-list-tile :key="item.title" @click="goDetail(item.id)">
+            <v-list-tile :key="item['.key']" @click="goDetail(item['.key'])">
               <v-list-tile-content>
                 <v-list-tile-title v-html="item.title"></v-list-tile-title>
                 <v-list-tile-sub-title v-html="item.desc" right></v-list-tile-sub-title>
@@ -35,39 +35,28 @@
 
 <script>
 import AskFormComp from "./AskFormComp";
-
+import AddTaskComp from "./AddTaskComp";
+import moment from "moment";
+import { db } from "../firebase";
 export default {
-  data() {
+  data: () => ({
+    today: moment(),
+    showAskForm: false,
+    tasks: []
+  }),
+  firestore() {
     return {
-      showAskForm: false,
-      tasks: [
-        {
-          color: "green",
-          time: "22:00",
-          title: "주짱구의 라이브",
-          desc: "주짱구의 라이브",
-          cast: "주시은"
-        },
-        {
-          color: "amber",
-          time: "22:00",
-          title: "배성재의 텐",
-          desc: "막나가는 용한 상담소",
-          cast: "배성재, 스님"
-        },
-        {
-          color: "pink",
-          time: "23:00",
-          title: "춘트리밍",
-          desc: "담소 오픈! (베타ver.) | 나미춘 스트리밍",
-          cast: "윤태진"
-        }
-      ]
+      tasks: db
+        .collection("TASK")
+        .where("date", ">=", this.$data.today.format("YYYY-MM-DD"))
+        .orderBy("date")
+        .orderBy("time")
     };
   },
   methods: {
     goDetail(id) {
       console.log(id);
+      this.$router.push("/task/" + id);
     }
   },
   components: {
