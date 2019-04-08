@@ -5,6 +5,7 @@ import Explorer from "./views/Explorer.vue";
 import Detail from "./views/Detail.vue";
 import AddTask from "./views/AddTask.vue";
 import Ask from "./views/Ask.vue";
+import AskDetail from "./views/AskDetail.vue";
 import Task from "./views/Task.vue";
 
 Vue.use(Router);
@@ -47,6 +48,17 @@ export default new Router({
       path: "/ask",
       name: "ask",
       component: Ask
+    },
+    {
+      path: "/ask/:id",
+      name: "askDetail",
+      props: true,
+      component: AskDetail
+    },
+    {
+      path: "/addAsk",
+      name: "askDetail",
+      component: AskDetail
     },
     {
       path: "/about",
