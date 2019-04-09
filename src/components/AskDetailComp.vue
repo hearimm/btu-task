@@ -66,8 +66,20 @@ export default {
     if (this.$props.id) {
       this.$binding("document", db.collection("ASK").doc(this.$props.id))
         .then(document => {
+          console.log(document);
           this.title = document.title;
           this.desc = document.desc;
+        })
+        .catch(err => {
+          console.error(err);
+        });
+
+      this.$binding(
+        "answer",
+        db.collection("ASK/" + this.$props.id + "/answer")
+      )
+        .then(document => {
+          console.log(document);
         })
         .catch(err => {
           console.error(err);

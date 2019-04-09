@@ -7,9 +7,6 @@
             <v-flex xs6>
               <v-subheader v-if="item.heading">{{ item.heading }}</v-subheader>
             </v-flex>
-            <v-flex xs6 class="text-xs-right">
-              <v-btn small flat>edit</v-btn>
-            </v-flex>
           </v-layout>
           <v-divider v-else-if="item.divider" :key="i" dark class="my-3"></v-divider>
           <v-list-tile v-else :key="i" @click="routeTo(item.route)">
@@ -52,11 +49,12 @@ export default {
       { icon: "add", text: "일정 추가", route: "/addTask" },
       { icon: "add", text: "일정 관리", route: "/task" },
       { divider: true },
-      { icon: "archive", text: "내정보", route: "/account" },
+      { icon: "archive", text: "내정보(만드는중)", route: "/account" },
+      { icon: "exit_to_app", text: "가입", route: "/auth" },
       { divider: true },
-      { icon: "settings", text: "설정", route: "/setting" },
+      { icon: "settings", text: "설정(만드는중)", route: "/setting" },
       { icon: "chat_bubble", text: "문의", route: "/ask" },
-      { icon: "help", text: "FAQ", route: "/faq" }
+      { icon: "help", text: "FAQ(만드는중)", route: "/faq" }
     ]
   }),
   props: {
