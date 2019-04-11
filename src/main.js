@@ -6,10 +6,12 @@ import store from "./store";
 // import { config } from "./config/firebaseConfig";
 // import firebase from "firebase/app";
 import VueFirestore from "vue-firestore";
+import DateRemainFilter from "./filters/dateRemainFilter";
 
 Vue.config.productionTip = false;
 Vue.use(VueFirestore);
 Vue.use(require("vue-moment"));
+Vue.filter("dateRemain", DateRemainFilter);
 
 new Vue({
   router,

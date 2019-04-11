@@ -1,69 +1,89 @@
 <template>
-<v-layout row wrap justify-center>
+  <v-layout row wrap justify-center>
     <v-flex xs12 sm6>
-  <v-card class="hide-overflow">
-    <v-toolbar card>
-      <v-icon>question_answer</v-icon>
-      <v-toolbar-title>문의/질문</v-toolbar-title>
-    </v-toolbar>
-    <v-form v-model="valid">
-      <v-card-text>
-        <v-text-field v-model="title" label="제목" required></v-text-field>
-        <v-textarea label="설명" v-model="desc"></v-textarea>
-      </v-card-text>
-    </v-form>
-    <v-divider></v-divider>
-    <v-card-actions v-if="id">
-      <v-spacer></v-spacer>
-      <v-btn color="success" @click="cancel">Cancel</v-btn>
-      <v-btn color="success" @click="deleteItem">Delete</v-btn>
-      <v-btn color="success" @click="modifyItem">수정</v-btn>
-    </v-card-actions>
-    <v-card-actions v-else>
-      <v-spacer></v-spacer>
-      <v-btn color="success" @click="save">Save</v-btn>
-    </v-card-actions>
-    <v-snackbar
-      v-model="hasSaved"
-      :timeout="2000"
-      absolute
-      bottom
-      left
-    >Your profile has been updated</v-snackbar>
-    <v-card-text>
-    <v-list>
-      <template v-for="(item) in askComment">
-        <div :key="item['.key']" style="height:auto;">
-          <v-divider></v-divider>
-          <v-list-tile-content>
-            <v-list-tile-sub-title class="text--primary">{{item.desc+" - " +item.user_name}}
-              <span class="text--secondary">{{" "+item.update_dt}}</span>
-            </v-list-tile-sub-title>
-          </v-list-tile-content>
-        </div>
-      </template>
-      <v-divider></v-divider>
-    </v-list>
+      <v-card class="hide-overflow">
+        <v-toolbar card>
+          <v-icon>question_answer</v-icon>
+          <v-toolbar-title>문의/질문</v-toolbar-title>
+        </v-toolbar>
+        <v-form v-model="valid">
+          <v-card-text>
+            <v-text-field v-model="title" label="제목" readonly required></v-text-field>
+            <v-textarea label="설명" v-model="desc" readonly></v-textarea>
+          </v-card-text>
+        </v-form>
+        <v-divider></v-divider>
+        <v-card-actions v-if="id">
+          <v-spacer></v-spacer>
+          <v-btn color="success" @click="cancel">Cancel</v-btn>
+          <v-btn color="success" @click="deleteItem">Delete</v-btn>
+          <v-btn color="success" @click="modifyItem">수정</v-btn>
+        </v-card-actions>
+        <v-card-actions v-else>
+          <v-spacer></v-spacer>
+          <v-btn color="success" @click="save">Save</v-btn>
+        </v-card-actions>
+        <v-snackbar
+          v-model="hasSaved"
+          :timeout="2000"
+          absolute
+          bottom
+          left
+        >Your profile has been updated</v-snackbar>
+        <v-card-text>
+          <v-list>
+            <template v-for="(item) in askComment">
+              <div :key="item['.key']" style="height:auto;">
+                <v-divider></v-divider>
+                <v-list-tile-content>
+                  <v-list-tile-sub-title class="text--primary">
+                    {{item.desc+" - " +item.user_name}}
+                    <span
+                      class="text--secondary"
+                    >{{" "+ item.update_dt.toDate() | dateRemain }}</span>
+                  </v-list-tile-sub-title>
+                </v-list-tile-content>
+              </div>
+            </template>
+            <v-divider></v-divider>
+          </v-list>
 
-      <v-layout row wrap>
-        <v-flex>
-          <v-text-field v-model="askNewComment" label="댓글쓰기" required></v-text-field>
-        </v-flex>
-        <v-flex>
-          <v-btn color="primary" @click="addAskComment">등록</v-btn>
-        </v-flex>
-      </v-layout>
-    </v-card-text>
-  </v-card>
-  <template v-for="item in answers">
-    <AskAnswerComp :key="item['.key']" :askId="id" :answerId="item['.key']" />
-  </template>
-  </v-flex>  
-</v-layout>
+          <v-layout row wrap>
+            <v-flex>
+              <v-text-field v-model="askNewComment" label="댓글쓰기" required></v-text-field>
+            </v-flex>
+            <v-flex>
+              <v-btn color="primary" @click="addAskComment">등록</v-btn>
+            </v-flex>
+          </v-layout>
+        </v-card-text>
+      </v-card>
+      <template v-for="item in answers">
+        <AskAnswerComp :key="item['.key']" :askId="id" :answerId="item['.key']"/>
+      </template>
+      <v-card class="hide-overflow">
+        <v-toolbar card>
+          <v-icon>question_answer</v-icon>
+          <v-toolbar-title>답변달기</v-toolbar-title>
+        </v-toolbar>
+        <v-form v-model="valid">
+          <v-card-text>
+            <v-textarea label="설명" v-model="newAnswerDesc"></v-textarea>
+          </v-card-text>
+        </v-form>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="success" @click="addNewAnswer">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
 import { db } from "../firebase";
+import moment from "moment";
 import AskAnswerComp from "./AskAnswerComp";
 
 export default {
@@ -87,27 +107,29 @@ export default {
       isEditing: null,
       model: null,
       isUpdating: false,
-      askNewComment:"",
-      answerNewComment:"",
-      answerComments:"",
-      askComment: [
-        {desc: "야야야",user_name:"나",update_dt:"2019-04-10 22:00"},
-        {desc: "야야야",user_name:"나",update_dt:"2019-04-10 22:00"},
-        {desc: "야야야",user_name:"나",update_dt:"2019-04-10 22:00"},
-        {desc: "야야야",user_name:"나",update_dt:"2019-04-10 22:00"},
-      ],
+      askNewComment: "",
+      answerNewComment: "",
+      answerComments: "",
+      askComment: [],
       answers: [],
-      answer: {
-        desc: "", user_name:"나",update_dt:"2019-04-10 22:00"
-      }
+      answer: {},
+      newAnswerDesc: ""
     };
+  },
+
+  computed: {
+    toMoment: function() {
+      // `this` 는 vm 인스턴스를 가리킵니다.
+      return "123";
+    }
   },
 
   firestore() {
     console.log(this.$props.id);
     return {
       askCollection: db.collection("ASK"),
-      answerCollection: db.collection("ASK/" + this.$props.id + "/answer")
+      answerCollection: db.collection("ASK/" + this.$props.id + "/answer"),
+      commentCollection: db.collection("ASK/" + this.$props.id + "/comments")
     };
   },
 
@@ -124,46 +146,21 @@ export default {
           console.error(err);
         });
 
-      this.$binding(
-        "answers",
-        db.collection("ASK/" + this.$props.id + "/answer")
-      )
-      .then(document => {
-        console.log(document);
-        this.answer = document[0];
-        console.log(this.answer);
-      })
-      .catch(err => {
-        console.error(err);
-      });
-      
-
-      this.$binding(
-        "askComment",
-        db.collection("ASK/" + this.$props.id + "/comments")
-      )
-        .then(document => {
-          console.log(document);
-        })
-        .catch(err => {
-          console.error(err);
-        });
+      this.$binding("askComment", this.$firestore.commentCollection);
     }
   },
 
   methods: {
     allowedStep: m => m % 10 === 0,
-    addAskComment(){
-      console.log("newAddAskComment")
-    },
-    addAnswerComment() {
-      console.log("new");
-    },
-    deleteAnswer() {
-      console.log("deleteAnswer");
-    },
-    modifyAnswer() {
-      console.log("modifyAnswer");
+    addAskComment() {
+      this.$firestore.commentCollection
+        .add({
+          desc: this.askNewComment,
+          create_dt: new Date(),
+          update_dt: new Date()
+        })
+        .then(console.log())
+        .catch();
     },
     save() {
       this.$firestore.askCollection
@@ -173,11 +170,11 @@ export default {
           create_dt: new Date(),
           update_dt: new Date()
         })
-        .then(function(docRef) {
+        .then(docRef => {
           console.log("Document written with ID: ", docRef.id);
           this.$router.go(-1);
         })
-        .catch(function(error) {
+        .catch(error => {
           console.error("Error adding document: ", error);
         });
     },
@@ -199,6 +196,19 @@ export default {
     },
     cancel() {
       this.$router.go(-1);
+    },
+
+    addNewAnswer() {
+      this.$firestore.answerCollection
+        .add({
+          desc: this.newAnswerDesc,
+          create_dt: new Date(),
+          update_dt: new Date()
+        })
+        .then(() => {
+          this.newAnswerDesc = "";
+        })
+        .catch();
     }
   }
 };
