@@ -7,6 +7,9 @@ import store from "./store";
 // import firebase from "firebase/app";
 import VueFirestore from "vue-firestore";
 import DateRemainFilter from "./filters/dateRemainFilter";
+import {
+  firebaseApp
+} from "./firebase";
 
 Vue.config.productionTip = false;
 Vue.use(VueFirestore);
@@ -20,14 +23,14 @@ new Vue({
   created() {
     // console.log(config);
     // firebase.initializeApp(config);
-    // firebase.auth().onAuthStateChanged(user => {
-    //   if (user) {
-    //     this.$store.dispatch("user/setUser", firebase.auth().currentUser);
-    //     this.$store.dispatch("user/fetchUserData");
-    //   } else {
-    //     this.$store.dispatch("user/fetchUnLoginUserData");
-    //     // this.$router.push('/auth')
-    //   }
-    // });
+    firebaseApp.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.$store.dispatch("setUser", firebaseApp.auth().currentUser);
+        this.$store.dispatch("fetchUserData");
+      } else {
+        this.$store.dispatch("fetchUnLoginUserData");
+        // this.$router.push('/auth')
+      }
+    });
   }
 }).$mount("#app");

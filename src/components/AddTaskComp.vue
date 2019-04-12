@@ -77,13 +77,7 @@
       <v-spacer></v-spacer>
       <v-btn color="success" @click="save">Save</v-btn>
     </v-card-actions>
-    <v-snackbar
-      v-model="hasSaved"
-      :timeout="2000"
-      absolute
-      bottom
-      left
-    >Your profile has been updated</v-snackbar>
+    <v-snackbar v-model="hasSaved" :timeout="2000" absolute bottom left>저장되었습니다.</v-snackbar>
   </v-card>
 </template>
 
@@ -148,12 +142,12 @@ export default {
           desc: this.desc,
           cast: this.cast
         })
-        .then(function(docRef) {
+        .then(docRef => {
           console.log("Document written with ID: ", docRef.id);
           this.hasSaved = true;
           this.isEditing = !this.isEditing;
         })
-        .catch(function(error) {
+        .catch(error => {
           console.error("Error adding document: ", error);
         });
     },

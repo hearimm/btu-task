@@ -1,7 +1,11 @@
-import { firebase } from "@firebase/app";
+import {
+    firebase
+} from "@firebase/app";
 import "@firebase/firestore";
-import { config } from "./config/firebaseConfig";
+import {
+    config
+} from "./config/firebaseConfig";
 
-const firebaseApp = firebase.initializeApp(config);
+export const firebaseApp = firebase.initializeApp(config);
 
 export const db = firebaseApp.firestore();

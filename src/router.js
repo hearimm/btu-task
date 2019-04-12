@@ -9,6 +9,7 @@ import AskAdd from "./views/AskAdd.vue";
 import AskDetail from "./views/AskDetail.vue";
 import Task from "./views/Task.vue";
 import Auth from "./views/Auth.vue";
+import store from "./store";
 
 Vue.use(Router);
 
@@ -64,6 +65,13 @@ export default new Router({
       path: "/auth",
       name: "auth",
       component: Auth
+    },
+    {
+      path: '/logout',
+      beforeEnter(to, from, next) {
+        store.dispatch("signOut");
+        next('/')
+      }
     },
     {
       path: "/about",

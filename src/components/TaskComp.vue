@@ -7,7 +7,7 @@
 
           <v-spacer></v-spacer>
 
-          <v-btn right color="primary" @click.stop="showAskForm=true">
+          <v-btn right color="primary" @click="goTaskAdd()">
             일정추가하기
             <AskFormComp v-model="showAskForm"/>
           </v-btn>
@@ -55,8 +55,10 @@ export default {
   },
   methods: {
     goDetail(id) {
-      console.log(id);
       this.$router.push("/task/" + id);
+    },
+    goTaskAdd() {
+      this.$router.push("/addTask");
     }
   },
   components: {
