@@ -63,6 +63,8 @@ export default {
         .add({
           title: this.title,
           desc: this.desc,
+          uid: this.$store.getters["uid"],
+          displayName: this.$store.getters["displayName"],
           create_dt: new Date(),
           update_dt: new Date()
         })

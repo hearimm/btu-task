@@ -52,10 +52,14 @@ export default {
     items() {
       return [
         { icon: "lightbulb_outline", text: "타임라인", route: "/", show: true },
-        { icon: "touch_app", text: "살펴보기", route: "/explorer", show: true },
+        {
+          icon: "touch_app",
+          text: "탐색(만드는중)",
+          route: "/explorer",
+          show: true
+        },
         { divider: true },
-        { heading: "Labels" },
-        { icon: "add", text: "일정 추가", route: "/addTask", show: true },
+        { heading: "일정" },
         { icon: "add", text: "일정 관리", route: "/task", show: true },
         { divider: true },
         {
@@ -66,7 +70,7 @@ export default {
         },
         {
           icon: "exit_to_app",
-          text: "가입",
+          text: "로그인",
           route: "/auth",
           show: !this.$store.getters["isUserAuthenticated"]
         },

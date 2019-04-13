@@ -71,5 +71,15 @@ export default new Vuex.Store({
     isUserAuthenticated(state) {
       return state.user !== null && state.user !== undefined;
     },
+    uid(state) {
+      if(state.user !== null && state.user !== undefined){
+        return state.user.uid;
+      }
+    },
+    displayName(state) {
+      if(state.user !== null && state.user !== undefined){
+        return state.user.displayName;
+      }
+    },
   }
 })

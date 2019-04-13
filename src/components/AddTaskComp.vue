@@ -140,7 +140,13 @@ export default {
           date: this.date,
           time: this.time,
           desc: this.desc,
-          cast: this.cast
+          cast: this.cast,
+          create_dt: new Date(),
+          create_uid: this.$store.getters["uid"],
+          create_name: this.$store.getters["displayName"],
+          update_dt: new Date(),
+          update_uid: this.$store.getters["uid"],
+          update_name: this.$store.getters["displayName"]
         })
         .then(docRef => {
           console.log("Document written with ID: ", docRef.id);
@@ -160,12 +166,15 @@ export default {
     modifyItem() {
       this.$firestore.tasks
         .doc(this.$props.id)
-        .update({
+        .set({
           title: this.title,
           date: this.date,
           time: this.time,
           desc: this.desc,
-          cast: this.cast
+          cast: this.cast,
+          update_dt: new Date(),
+          update_uid: this.$store.getters["uid"],
+          update_name: this.$store.getters["displayName"]
         })
         .then(this.$router.go(-1));
     },

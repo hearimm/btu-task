@@ -1,7 +1,7 @@
 <template>
   <v-card class="mx-auto" max-width="400">
     <v-card dark flat>
-      <v-btn absolute bottom color="pink" right fab>
+      <v-btn absolute bottom color="pink" right fab @click="goAddTask()">
         <v-icon>add</v-icon>
       </v-btn>
       <v-card-title class="pa-2 purple lighten-3">
@@ -68,6 +68,11 @@ export default {
         .orderBy("date")
         .orderBy("time")
     };
+  },
+  methods: {
+    goAddTask() {
+      this.$router.push("/addTask");
+    }
   }
 };
 </script>

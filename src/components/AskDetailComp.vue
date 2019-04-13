@@ -13,15 +13,11 @@
           </v-card-text>
         </v-form>
         <v-divider></v-divider>
-        <v-card-actions v-if="id">
+        <v-card-actions v-if="isPermission(uid)">
           <v-spacer></v-spacer>
           <v-btn color="success" @click="cancel">Cancel</v-btn>
           <v-btn color="success" @click="deleteItem">Delete</v-btn>
           <v-btn color="success" @click="modifyItem">수정</v-btn>
-        </v-card-actions>
-        <v-card-actions v-else>
-          <v-spacer></v-spacer>
-          <v-btn color="success" @click="save">Save</v-btn>
         </v-card-actions>
         <v-snackbar
           v-model="hasSaved"
@@ -32,23 +28,29 @@
         >Your profile has been updated</v-snackbar>
         <v-card-text>
           <v-list>
-            <template v-for="(item) in askComment">
-              <div :key="item['.key']" style="height:auto;">
-                <v-divider></v-divider>
+            <template v-for="(item, index) in askComment">
+              <v-list-tile :key="item['.key']" style="height:auto;">
                 <v-list-tile-content>
-                  <v-list-tile-sub-title class="text--primary">
-                    {{item.desc+" - " +item.user_name}}
+                  <v-list-tile-title>
+                    {{item.displayName}}
                     <span
                       class="text--secondary"
-                    >{{" "+ item.update_dt.toDate() | dateRemain }}</span>
-                  </v-list-tile-sub-title>
+                    >{{ item.update_dt.toDate() | dateRemain}}</span>
+                  </v-list-tile-title>
+                  <v-list-tile-sub-title class="text--primary">{{item.desc}}</v-list-tile-sub-title>
                 </v-list-tile-content>
-              </div>
+
+                <v-list-tile-action>
+                  <v-btn icon v-if="isPermission(item.uid)" @click="deleteComment(item['.key'])">
+                    <v-icon color="grey lighten-1">delete</v-icon>
+                  </v-btn>
+                </v-list-tile-action>
+              </v-list-tile>
+              <v-divider v-if="index + 1 < askComment.length" :key="index"></v-divider>
             </template>
-            <v-divider></v-divider>
           </v-list>
 
-          <v-layout row wrap>
+          <v-layout row wrap v-if="isUserAuthenticated()">
             <v-flex>
               <v-text-field v-model="askNewComment" label="댓글쓰기" required></v-text-field>
             </v-flex>
@@ -61,7 +63,8 @@
       <template v-for="item in answers">
         <AskAnswerComp :key="item['.key']" :askId="id" :answerId="item['.key']"/>
       </template>
-      <v-card class="hide-overflow">
+
+      <v-card class="hide-overflow" v-if="isUserAuthenticated()">
         <v-toolbar card>
           <v-icon>question_answer</v-icon>
           <v-toolbar-title>답변달기</v-toolbar-title>
@@ -98,8 +101,6 @@ export default {
     ];
 
     return {
-      menuDate: false,
-      menuTime: false,
       title: "",
       desc: "",
       valid: false,
@@ -113,7 +114,8 @@ export default {
       askComment: [],
       answers: [],
       answer: {},
-      newAnswerDesc: ""
+      newAnswerDesc: "",
+      uid: ""
     };
   },
 
@@ -141,6 +143,20 @@ export default {
           console.log(document);
           this.title = document.title;
           this.desc = document.desc;
+          this.uid = document.uid;
+        })
+        .catch(err => {
+          console.error(err);
+        });
+
+      this.$binding(
+        "answers",
+        db.collection("ASK/" + this.$props.id + "/answer")
+      )
+        .then(document => {
+          console.log(document);
+          this.answer = document[0];
+          console.log(this.answer);
         })
         .catch(err => {
           console.error(err);
@@ -152,30 +168,37 @@ export default {
 
   methods: {
     allowedStep: m => m % 10 === 0,
+    isPermission(uid) {
+      return this.$store.getters["uid"] === uid;
+    },
+    isUserAuthenticated() {
+      return this.$store.getters["isUserAuthenticated"];
+    },
     addAskComment() {
       this.$firestore.commentCollection
         .add({
           desc: this.askNewComment,
+          uid: this.$store.getters["uid"],
+          displayName: this.$store.getters["displayName"],
           create_dt: new Date(),
           update_dt: new Date()
         })
-        .then(console.log())
-        .catch();
+        .then(() => {
+          this.askNewComment = "";
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
-    save() {
-      this.$firestore.askCollection
-        .add({
-          title: this.title,
-          desc: this.desc,
-          create_dt: new Date(),
-          update_dt: new Date()
+    deleteComment(id) {
+      this.$firestore.commentCollection
+        .doc(id)
+        .delete()
+        .then(() => {
+          console.log("delete comments:");
         })
-        .then(docRef => {
-          console.log("Document written with ID: ", docRef.id);
-          this.$router.go(-1);
-        })
-        .catch(error => {
-          console.error("Error adding document: ", error);
+        .catch(err => {
+          console.log(err);
         });
     },
     deleteItem() {
@@ -202,10 +225,13 @@ export default {
       this.$firestore.answerCollection
         .add({
           desc: this.newAnswerDesc,
+          uid: this.$store.getters["uid"],
+          displayName: this.$store.getters["displayName"],
           create_dt: new Date(),
           update_dt: new Date()
         })
-        .then(() => {
+        .then(doc => {
+          console.log(doc);
           this.newAnswerDesc = "";
         })
         .catch();
