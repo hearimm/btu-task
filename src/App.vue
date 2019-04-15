@@ -51,7 +51,13 @@ export default {
     },
     items() {
       return [
-        { icon: "lightbulb_outline", text: "타임라인", route: "/", show: true },
+        { icon: "lightbulb_outline", text: "홈", route: "/", show: true },
+        {
+          icon: "lightbulb_outline",
+          text: "타임라인",
+          route: "/timeline",
+          show: true
+        },
         {
           icon: "touch_app",
           text: "탐색(만드는중)",

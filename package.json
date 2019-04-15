@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "hosting": "vue-cli-service build && firebase deploy --only hosting"
+    "hosting": "vue-cli-service build && firebase deploy --only hosting",
+    "test": "vue-cli-service build && firebase serve"
   },
   "dependencies": {
     "@firebase/app": "^0.3.14",
