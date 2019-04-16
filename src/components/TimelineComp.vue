@@ -74,7 +74,10 @@ export default {
   },
   methods: {
     goAddTask() {
-      this.$router.push("/addTask");
+      this.$router.push({
+        name: "taskAdd",
+        params: { pDate: this.$data.today.format("YYYY-MM-DD") }
+      });
     }
   }
 };

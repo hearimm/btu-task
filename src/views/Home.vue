@@ -1,13 +1,13 @@
 <template>
-  <HelloWorld/>
+  <TimelineComp :addDays="0"/>
 </template>
 
 <script>
-import HelloWorld from "../components/HelloWorld";
+import TimelineComp from "../components/TimelineComp";
 
 export default {
   components: {
-    HelloWorld
+    TimelineComp
   }
 };
 </script>

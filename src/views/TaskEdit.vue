@@ -1,14 +1,14 @@
 <template>
-  <AddTaskComp :id="id"/>
+  <TaskEditComp :id="id"/>
 </template>
 
 <script>
-import AddTaskComp from "../components/AddTaskComp";
+import TaskEditComp from "../components/TaskEditComp";
 
 export default {
   props: ["id"],
   components: {
-    AddTaskComp
+    TaskEditComp
   }
 };
 </script>
