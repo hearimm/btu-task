@@ -71,6 +71,9 @@ export default {
     },
     routeTo(id) {
       this.$router.push({ name: "detail", params: { id: id } });
+    },
+    goTaskEdit(id) {
+      this.$router.push("/task/" + id);
     }
   },
 
@@ -113,11 +116,6 @@ export default {
         default:
           return {};
       }
-    }
-  },
-  methods: {
-    goTaskEdit(id) {
-      this.$router.push("/task/" + id);
     }
   }
 };
