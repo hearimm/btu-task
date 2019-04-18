@@ -35,7 +35,7 @@
 
 <script>
 import AskFormComp from "./AskFormComp";
-import AddTaskComp from "./AddTaskComp";
+
 import moment from "moment";
 import { db } from "../firebase";
 export default {
@@ -58,7 +58,7 @@ export default {
       this.$router.push("/task/" + id);
     },
     goTaskAdd() {
-      this.$router.push("/addTask");
+      this.$router.push("/taskAdd");
     }
   },
   components: {

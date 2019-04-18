@@ -10,6 +10,9 @@ import Ask from "./views/Ask.vue";
 import AskAdd from "./views/AskAdd.vue";
 import AskDetail from "./views/AskDetail.vue";
 import Task from "./views/Task.vue";
+import Cast from "./views/Cast.vue";
+import CastAdd from "./views/CastAdd.vue";
+import CastEdit from "./views/CastEdit.vue";
 import Auth from "./views/Auth.vue";
 import store from "./store";
 
@@ -45,9 +48,28 @@ export default new Router({
       component: Explorer
     },
     {
-      path: "/detail",
+      path: "/detail/:id",
       name: "detail",
+      props: true,
       component: Detail
+    },
+    {
+      path: "/cast",
+      name: "cast",
+      component: Cast
+    },
+    {
+      path: "/castAdd",
+      name: "castAdd",
+      beforeEnter: requireAuth,
+      component: CastAdd
+    },
+    {
+      path: "/cast/:id",
+      name: "castEdit",
+      props: true,
+      beforeEnter: requireAuth,
+      component: CastEdit
     },
     {
       path: "/task",
@@ -80,8 +102,8 @@ export default new Router({
       component: AskDetail
     },
     {
-      path: "/addAsk",
-      name: "askDetail",
+      path: "/askAdd",
+      name: "askAdd",
       beforeEnter: requireAuth,
       component: AskAdd
     },

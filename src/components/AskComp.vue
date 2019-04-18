@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     goAddPage() {
-      this.$router.push("/addAsk/");
+      this.$router.push("/askAdd/");
     },
     goDetail(id) {
       console.log(id);

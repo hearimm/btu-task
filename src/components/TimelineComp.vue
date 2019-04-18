@@ -1,7 +1,7 @@
 <template>
   <v-card class="mx-auto" max-width="400">
     <v-card dark flat>
-      <v-btn absolute bottom color="pink" right fab @click="goAddTask()">
+      <v-btn absolute bottom color="pink" right fab @click="goTaskAdd()">
         <v-icon>add</v-icon>
       </v-btn>
       <v-card-title class="pa-2 purple lighten-3">
@@ -89,6 +89,10 @@ export default {
         "2",
         "https://scontent-icn1-1.cdninstagram.com/vp/508ef164852082a64b250e635be43383/5D37542A/t51.2885-15/e35/56344611_288390578752370_4060979878760024738_n.jpg?_nc_ht=scontent-icn1-1.cdninstagram.com"
       );
+      imgMap.set(
+        "4",
+        "https://scontent-icn1-1.cdninstagram.com/vp/b9bba1eeb750ea3f43eafae2ff0a61a8/5D731E8D/t51.2885-15/e35/55837738_339904723230823_6511028640868583943_n.jpg?_nc_ht=scontent-icn1-1.cdninstagram.com"
+      );
 
       const week = moment()
         .add(this.$props.addDays, "days")
@@ -102,7 +106,7 @@ export default {
   },
 
   methods: {
-    goAddTask() {
+    goTaskAdd() {
       this.$router.push({
         name: "taskAdd",
         params: { pDate: this.$data.today.format("YYYY-MM-DD") }

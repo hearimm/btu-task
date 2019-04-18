@@ -1,7 +1,7 @@
 <template>
   <v-card class="mx-auto" max-width="400">
     <v-card dark flat>
-      <v-btn absolute bottom color="pink" right fab @click="goAddTask()">
+      <v-btn absolute bottom color="pink" right fab @click="goTaskAdd()">
         <v-icon>add</v-icon>
       </v-btn>
       <v-card-title class="pa-2 purple lighten-3">
@@ -70,8 +70,8 @@ export default {
     };
   },
   methods: {
-    goAddTask() {
-      this.$router.push("/addTask");
+    goTaskAdd() {
+      this.$router.push("/taskAdd");
     }
   }
 };

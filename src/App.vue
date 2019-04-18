@@ -67,6 +67,7 @@ export default {
         { divider: true },
         { heading: "일정" },
         { icon: "add", text: "일정 관리", route: "/task", show: true },
+        { icon: "add", text: "출연자 관리", route: "/cast", show: true },
         { divider: true },
         {
           icon: "archive",

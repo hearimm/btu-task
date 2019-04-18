@@ -108,7 +108,6 @@ export default {
   },
 
   firestore() {
-    console.log(this.$props.id);
     return {
       tasks: db.collection("TASK")
     };

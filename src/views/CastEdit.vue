@@ -1,14 +1,14 @@
 <template>
-  <DetailComp :id="id"/>
+  <CastEditComp :id="id"/>
 </template>
 
 <script>
-import DetailComp from "../components/DetailComp";
+import CastEditComp from "../components/CastEditComp";
 
 export default {
   props: ["id"],
   components: {
-    DetailComp
+    CastEditComp
   }
 };
 </script>

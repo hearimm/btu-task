@@ -62,18 +62,36 @@
         </v-menu>
 
         <v-text-field v-model="desc" label="설명" required></v-text-field>
-        <v-text-field v-model="cast" label="MC/출연자" required></v-text-field>
+
+        <v-select
+          v-model="chips"
+          :items="casts"
+          item-text="name"
+          item-value=".key"
+          label="MC/출연자"
+          chips
+          clearable
+          prepend-icon="account_circle"
+          multiple
+          return-object
+        >
+          <template v-slot:selection="data">
+            <v-chip :selected="data.selected" close @input="remove(data.item)">
+              <v-avatar>
+                <v-img :src="data.item.photoLink"/>
+              </v-avatar>
+              <strong>{{ data.item.name }}</strong>&nbsp;
+            </v-chip>
+          </template>
+        </v-select>
+        <v-text-field v-model="castText" label="MC/출연자(기타)" required></v-text-field>
+        <v-text-field v-model="castTextConcat" label="MC/출연자(저장양식)" readonly box required></v-text-field>
+        <v-text-field v-model="timestamp" label="timestamp(저장양식)" readonly box required></v-text-field>
+        <v-text-field v-model="tags" label="tags(저장양식)" readonly box required></v-text-field>
       </v-card-text>
     </v-form>
     <v-divider></v-divider>
-    <v-card-actions v-if="id">
-      <v-spacer></v-spacer>
-
-      <v-btn color="success" @click="cancel">Cancel</v-btn>
-      <v-btn color="success" @click="deleteItem">Delete</v-btn>
-      <v-btn color="success" @click="modifyItem">수정</v-btn>
-    </v-card-actions>
-    <v-card-actions v-else>
+    <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn color="success" @click="save">Save</v-btn>
     </v-card-actions>
@@ -83,6 +101,9 @@
 
 <script>
 import { db } from "../firebase";
+import moment from "moment";
+import shared from "../shared";
+
 export default {
   props: ["pDate"],
   data() {
@@ -99,44 +120,70 @@ export default {
       time: "",
       desc: "",
       cast: "",
+      castText: "",
       valid: false,
       hasSaved: false,
       isEditing: null,
       model: null,
-      isUpdating: false
+      isUpdating: false,
+      chips: []
     };
   },
 
   firestore() {
-    console.log(this.$props.id);
     return {
-      tasks: db.collection("TASK")
+      tasks: db.collection("TASK"),
+      casts: db.collection("CAST").orderBy("name")
     };
   },
 
   mounted() {
-    // Binding Docs
-    if (this.$props.id) {
-      this.$binding("document", db.collection("TASK").doc(this.$props.id))
-        .then(document => {
-          this.title = document.title;
-          this.date = document.date;
-          this.time = document.time;
-          this.desc = document.desc;
-          this.cast = document.cast;
-        })
-        .catch(err => {
-          console.error(err);
-        });
-    }
-
     if (this.$props.pDate) {
       this.date = this.$props.pDate;
     }
   },
 
+  computed: {
+    castTextConcat() {
+      let result = [];
+      if (this.castText === "undefined") {
+        this.castText = "";
+      }
+      if (!shared.isIterable(this.chips)) {
+        return "";
+      }
+
+      for (const item of this.chips) {
+        result.push(item.name);
+      }
+      this.cast = result.join(",") + this.castText;
+      return this.cast;
+    },
+    tags() {
+      let obj = new Object();
+      const timestamp = this.timestamp;
+      if (!shared.isIterable(this.chips)) {
+        return null;
+      }
+      for (const item of this.chips) {
+        obj[item[".key"]] = this.timestamp;
+      }
+      return obj;
+    },
+    timestamp() {
+      return (
+        moment(this.date + " " + this.time, "YYYY-MM-DD HH:mm:ss").format("X") *
+        1
+      );
+    }
+  },
+
   methods: {
     allowedStep: m => m % 10 === 0,
+    remove(item) {
+      this.chips.splice(this.chips.indexOf(item), 1);
+      this.chips = [...this.chips];
+    },
     save() {
       this.$firestore.tasks
         .add({
@@ -145,6 +192,10 @@ export default {
           time: this.time,
           desc: this.desc,
           cast: this.cast,
+          timestamp: this.timestamp,
+          tags: this.tags,
+          chips: this.chips,
+          castText: this.castText,
           create_dt: new Date(),
           create_uid: this.$store.getters["uid"],
           create_name: this.$store.getters["displayName"],
@@ -160,27 +211,6 @@ export default {
         .catch(error => {
           console.error("Error adding document: ", error);
         });
-    },
-    deleteItem() {
-      this.$firestore.tasks
-        .doc(this.$props.id)
-        .delete()
-        .then(this.$router.go(-1));
-    },
-    modifyItem() {
-      this.$firestore.tasks
-        .doc(this.$props.id)
-        .set({
-          title: this.title,
-          date: this.date,
-          time: this.time,
-          desc: this.desc,
-          cast: this.cast,
-          update_dt: new Date(),
-          update_uid: this.$store.getters["uid"],
-          update_name: this.$store.getters["displayName"]
-        })
-        .then(this.$router.go(-1));
     },
     cancel() {
       this.$router.go(-1);

@@ -56,9 +56,6 @@ export default {
   methods: {
     allowedStep: m => m % 10 === 0,
     save() {
-      console.log(this);
-      console.log(this.firestore);
-      console.log(this.$firestore);
       this.$firestore.askCollection
         .add({
           title: this.title,
@@ -70,7 +67,6 @@ export default {
         })
         .then(docRef => {
           console.log("Document written with ID: ", docRef.id);
-          console.log(this);
           this.$router.go(-1);
         })
         .catch(error => {

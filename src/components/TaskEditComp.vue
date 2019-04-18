@@ -62,7 +62,31 @@
         </v-menu>
 
         <v-text-field v-model="desc" label="설명" required></v-text-field>
-        <v-text-field v-model="cast" label="MC/출연자" required></v-text-field>
+        <v-select
+          v-model="chips"
+          :items="casts"
+          item-text="name"
+          item-value=".key"
+          label="MC/출연자"
+          chips
+          clearable
+          prepend-icon="account_circle"
+          multiple
+          return-object
+        >
+          <template v-slot:selection="data">
+            <v-chip :selected="data.selected" close @input="remove(data.item)">
+              <v-avatar>
+                <v-img :src="data.item.photoLink"/>
+              </v-avatar>
+              <strong>{{ data.item.name }}</strong>&nbsp;
+            </v-chip>
+          </template>
+        </v-select>
+        <v-text-field v-model="castText" label="MC/출연자(기타)" required></v-text-field>
+        <v-text-field v-model="castTextConcat" label="MC/출연자(저장양식)" readonly box required></v-text-field>
+        <v-text-field v-model="timestamp" label="timestamp(저장양식)" readonly box required></v-text-field>
+        <v-text-field v-model="tags" label="tags(저장양식)" readonly box required></v-text-field>
       </v-card-text>
     </v-form>
     <v-divider></v-divider>
@@ -83,6 +107,9 @@
 
 <script>
 import { db } from "../firebase";
+import moment from "moment";
+import shared from "../shared";
+
 export default {
   props: ["id"],
   data() {
@@ -99,18 +126,21 @@ export default {
       time: "",
       desc: "",
       cast: "",
+      castText: "",
       valid: false,
       hasSaved: false,
       isEditing: null,
       model: null,
-      isUpdating: false
+      isUpdating: false,
+      chips: []
     };
   },
 
   firestore() {
     console.log(this.$props.id);
     return {
-      tasks: db.collection("TASK")
+      tasks: db.collection("TASK"),
+      casts: db.collection("CAST").orderBy("name")
     };
   },
 
@@ -124,6 +154,8 @@ export default {
           this.time = document.time;
           this.desc = document.desc;
           this.cast = document.cast;
+          this.castText = document.castText;
+          this.chips = document.chips;
         })
         .catch(err => {
           console.error(err);
@@ -131,8 +163,50 @@ export default {
     }
   },
 
+  computed: {
+    castTextConcat() {
+      let result = [];
+      if (typeof this.castText === "undefined") {
+        this.castText = "";
+      }
+      if (!shared.isIterable(this.chips)) {
+        return "";
+      }
+      for (const item of this.chips) {
+        result.push(item.name);
+      }
+      if (this.castText.length > 0) {
+        this.cast = result.join(",") + "," + this.castText;
+      } else {
+        this.cast = result.join(",");
+      }
+      return this.cast;
+    },
+    tags() {
+      let obj = new Object();
+      const timestamp = this.timestamp;
+      if (!shared.isIterable(this.chips)) {
+        return null;
+      }
+      for (const item of this.chips) {
+        obj[item[".key"]] = this.timestamp;
+      }
+      return obj;
+    },
+    timestamp() {
+      return (
+        moment(this.date + " " + this.time, "YYYY-MM-DD HH:mm:ss").format("X") *
+        1
+      );
+    }
+  },
+
   methods: {
     allowedStep: m => m % 10 === 0,
+    remove(item) {
+      this.chips.splice(this.chips.indexOf(item), 1);
+      this.chips = [...this.chips];
+    },
     save() {
       this.$firestore.tasks
         .add({
@@ -141,6 +215,10 @@ export default {
           time: this.time,
           desc: this.desc,
           cast: this.cast,
+          timestamp: this.timestamp,
+          tags: this.tags,
+          chips: this.chips,
+          castText: this.castText,
           create_dt: new Date(),
           create_uid: this.$store.getters["uid"],
           create_name: this.$store.getters["displayName"],
@@ -172,6 +250,10 @@ export default {
           time: this.time,
           desc: this.desc,
           cast: this.cast,
+          timestamp: this.timestamp,
+          tags: this.tags,
+          chips: this.chips,
+          castText: this.castText,
           update_dt: new Date(),
           update_uid: this.$store.getters["uid"],
           update_name: this.$store.getters["displayName"]
