@@ -2,7 +2,11 @@
   <v-layout row>
     <v-flex xs12 sm6 offset-sm3>
       <v-card>
-        <v-img :src="cast.photoLink" height="300px">
+        <v-img
+          :src="cast.photoLink"
+          height="300px"
+          gradient="to top, rgba(0,0,0,.44), rgba(0,0,0,.44)"
+        >
           <v-layout column fill-height>
             <v-card-title>
               <v-btn dark icon @click="goBack">

@@ -6,7 +6,11 @@
           <v-layout row wrap>
             <v-flex v-for="card in casts" :key="card['.key']" v-bind="{ [`xs${card.flex}`]: true }">
               <v-card @click="routeTo(card['.key'])">
-                <v-img :src="card.photoLink" height="200px">
+                <v-img
+                  :src="card.photoLink"
+                  height="200px"
+                  gradient="to top, rgba(0,0,0,.44), rgba(0,0,0,.44)"
+                >
                   <v-container fill-height fluid pa-2>
                     <v-layout fill-height>
                       <v-flex xs12 align-end flexbox>
