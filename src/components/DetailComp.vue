@@ -14,7 +14,7 @@
               </v-btn>
               <v-spacer></v-spacer>
 
-              <v-btn dark icon class="mr-3">
+              <v-btn dark icon class="mr-3" @click="goCastEdit">
                 <v-icon>edit</v-icon>
               </v-btn>
 
@@ -27,33 +27,35 @@
 
             <v-card-title class="white--text pl-5 pt-5">
               <div class="display-1 pl-5 pt-5">{{cast.name}}</div>
-              <v-btn color="pink" fab>
+              <v-btn color="pink" fab @click="goTaskAdd">
                 <v-icon>add</v-icon>
               </v-btn>
             </v-card-title>
           </v-layout>
         </v-img>
+
+        <v-list three-line>
+          <template v-for="item in tasks">
+            <v-list-tile :key="item['.key']" @click>
+              <v-list-tile-action>
+                <v-icon color="indigo">{{item.icon}}</v-icon>
+              </v-list-tile-action>
+
+              <v-list-tile-content>
+                <v-list-tile-title>{{item.title}}</v-list-tile-title>
+                <v-list-tile-sub-title>{{item.date + " " + item.time + " " + item.desc}}</v-list-tile-sub-title>
+                <v-list-tile-sub-title>{{item.cast}}</v-list-tile-sub-title>
+              </v-list-tile-content>
+
+              <v-list-tile-action>
+                <v-btn fab small color="primary" @click="goTaskEdit(item['.key'])">
+                  <v-icon>edit</v-icon>
+                </v-btn>
+              </v-list-tile-action>
+            </v-list-tile>
+          </template>
+        </v-list>
       </v-card>
-      <v-list v-for="item in tasks" :key="item['.key']" three-line>
-        <v-list-tile>
-          <v-list-tile-action>
-            <v-icon color="indigo">{{item.icon}}</v-icon>
-          </v-list-tile-action>
-
-          <v-list-tile-content>
-            <v-list-tile-title>{{item.title}}</v-list-tile-title>
-            <v-list-tile-sub-title>{{item.desc}}</v-list-tile-sub-title>
-            <v-list-tile-sub-title>{{item.date + " " + item.time}}</v-list-tile-sub-title>
-            <v-list-tile-sub-title>{{item.cast}}</v-list-tile-sub-title>
-          </v-list-tile-content>
-
-          <v-list-tile-action>
-            <v-btn fab dark small color="green" @click="goTaskEdit(item['.key'])">
-              <v-icon>edit</v-icon>
-            </v-btn>
-          </v-list-tile-action>
-        </v-list-tile>
-      </v-list>
     </v-flex>
   </v-layout>
 </template>
@@ -72,6 +74,12 @@ export default {
   methods: {
     goBack() {
       this.$router.go(-1);
+    },
+    goCastEdit() {
+      this.$router.push({ name: "castEdit", params: { id: this.$props.id } });
+    },
+    goTaskAdd() {
+      this.$router.push("/taskAdd");
     },
     routeTo(id) {
       this.$router.push({ name: "detail", params: { id: id } });
