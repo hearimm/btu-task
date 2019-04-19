@@ -4,6 +4,7 @@ import {
   db,
   firebaseApp
 } from './firebase';
+import { get } from 'https';
 
 Vue.use(Vuex)
 
@@ -11,6 +12,7 @@ export default new Vuex.Store({
   state: {
     user: null,
     role: null,
+    follows: [],
     subscribes: null
   },
   mutations: {
@@ -19,6 +21,18 @@ export default new Vuex.Store({
     },
     setRole: (state, role) => {
       state.role = role;
+    },
+    setFollows: (state, follows) => {
+      state.follows = follows;
+    },
+    addFollows: (state, item) => {
+      state.follows.push(item);
+    },
+    deleteFollows: (state, item) => {
+      const idx = state.follows.indexOf(item);
+      if (idx > -1) {
+        state.follows.splice(idx, 1);
+      }
     },
     setSubscribes(state, payload) {
       state.subscribes = {
@@ -32,13 +46,15 @@ export default new Vuex.Store({
     }, payload) => {
       commit("setUser", payload);
       db.collection("USER").doc(payload.uid).set({
-          email: payload.email,
-          displayName: payload.displayName,
-          emailVerified: payload.emailVerified,
-          login_dt: new Date()
-        }, {
+        email: payload.email,
+        displayName: payload.displayName,
+        emailVerified: payload.emailVerified,
+        login_dt: new Date()
+      }, {
           merge: true
-        }).then(console.log("success"))
+        }).then(
+          console.log("success")
+        )
         .catch(err => {
           console.log("err:" + err)
         });
@@ -49,7 +65,7 @@ export default new Vuex.Store({
       firebaseApp.auth().signOut().then(() => {
         console.log("signOut success");
         commit("setUser", null);
-        commit("setSubscribes", null);
+        commit("setFollows", []);
         commit("setRole", null);
       }).catch((err) => {
         console.log("signOut error: " + err)
@@ -59,27 +75,70 @@ export default new Vuex.Store({
     fetchUserData({
       commit,
       getters
-    }) {
-      // db조회해서 유저정보 가져오기
-      commit("setRole", null);
+    }, payload) {
+      db.collection("USER").doc(payload.uid)
+        .onSnapshot(function (document) {
+          if (document.data().follows) {
+            commit("setFollows", document.data().follows);
+            commit("setRole", document.data().role);
+          }
+        });
+
     },
     fetchUnLoginUserData({
       commit
-    }) {}
+    }) {
+      commit("setUser", null);
+      commit("setFollows", []);
+      commit("setRole", null);
+    },
+    setFollows({
+      commit
+    }, payload) {
+      commit("setFollows", payload);
+    },
+    addFollows({
+      commit
+    }, payload) {
+      commit("addFollows", payload);
+      db.collection("USER").doc(this.getters["uid"])
+        .update({
+          follows: this.getters["follows"]
+        });
+    },
+    deleteFollows({
+      commit
+    }, payload) {
+      commit("deleteFollows", payload);
+      db.collection("USER").doc(this.getters["uid"])
+        .update({
+          follows: this.getters["follows"]
+        });
+    },
   },
   getters: {
     isUserAuthenticated(state) {
       return state.user !== null && state.user !== undefined;
     },
     uid(state) {
-      if(state.user !== null && state.user !== undefined){
+      if (state.user !== null && state.user !== undefined) {
         return state.user.uid;
       }
     },
     displayName(state) {
-      if(state.user !== null && state.user !== undefined){
+      if (state.user !== null && state.user !== undefined) {
         return state.user.displayName;
       }
     },
+    follows(state) {
+      if (state.follows !== null && state.follows !== undefined) {
+        return state.follows;
+      }
+    },
+    isFollows: (state) => (id) => {
+      if (state.follows !== null && state.follows !== undefined) {
+        return state.follows.includes(id);
+      }
+    }
   }
 })

@@ -26,7 +26,7 @@ new Vue({
     firebaseApp.auth().onAuthStateChanged(user => {
       if (user) {
         this.$store.dispatch("setUser", firebaseApp.auth().currentUser);
-        this.$store.dispatch("fetchUserData");
+        this.$store.dispatch("fetchUserData", firebaseApp.auth().currentUser);
       } else {
         this.$store.dispatch("fetchUnLoginUserData");
         // this.$router.push('/auth')

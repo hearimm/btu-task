@@ -5,11 +5,12 @@
         <v-container fluid grid-list-md>
           <v-layout row wrap>
             <v-flex v-for="card in casts" :key="card['.key']" v-bind="{ [`xs${card.flex}`]: true }">
-              <v-card @click="routeTo(card['.key'])">
+              <v-card>
                 <v-img
                   :src="card.photoLink"
                   height="200px"
                   gradient="to top, rgba(0,0,0,.44), rgba(0,0,0,.44)"
+                  @click="routeTo(card['.key'])"
                 >
                   <v-container fill-height fluid pa-2>
                     <v-layout fill-height>
@@ -22,7 +23,11 @@
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn icon>
+
+                  <v-btn v-if="isFollows(card['.key'])" icon @click="deleteFollow(card['.key'])">
+                    <v-icon color="pink">favorite</v-icon>
+                  </v-btn>
+                  <v-btn v-else icon @click="addFollow(card['.key'])">
                     <v-icon>favorite</v-icon>
                   </v-btn>
                   <v-btn icon>
@@ -40,7 +45,6 @@
     </v-flex>
   </v-layout>
 </template>
-
 <script>
 import { db } from "../firebase";
 export default {
@@ -51,13 +55,35 @@ export default {
   firestore() {
     return {
       casts: db.collection("CAST").orderBy("name")
+      // userDoc: db.collection("USER").doc(this.$store.getters["uid"])
     };
   },
 
+  computed: {
+    follows() {
+      return this.$store.getters["follows"];
+    }
+  },
+
   methods: {
+    isFollows(id) {
+      return this.$store.getters["isFollows"](id);
+    },
     routeTo(value) {
       console.log(value);
       this.$router.push({ name: "detail", params: { id: value } });
+    },
+    addFollow(id) {
+      if (!this.$store.getters["isUserAuthenticated"]) {
+        return this.$router.push("/auth");
+      }
+      this.$store.dispatch("addFollows", id);
+    },
+    deleteFollow(id) {
+      if (!this.$store.getters["isUserAuthenticated"]) {
+        return this.$router.push("/auth");
+      }
+      this.$store.dispatch("deleteFollows", id);
     }
   }
 };

@@ -70,8 +70,7 @@ export default {
 
   firestore() {
     const tasks = [];
-    // const follows = ["yI4k03Ot0oHpaEvgDCES", "Y7JZk93oOFrLpA1GoABN"];
-    const follows = [];
+    const follows = this.$store.getters["follows"];
 
     db.collection("TASK")
       .where("timestamp", ">=", this.today.format("X") * 1)

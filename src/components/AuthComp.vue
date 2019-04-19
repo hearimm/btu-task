@@ -2,7 +2,8 @@
   <v-container>
     <v-layout row wrap>
       <v-flex mb-2 offset-sm3 sm6 xs12>
-        <h1>Welcome to My Awesome App</h1>
+        <h1>로그인 혜택</h1>
+        <h1>일정추가/팔로우 기능 추가됨</h1>
         <v-card>
           <v-layout align-center justify-center>
             <v-icon x-large>account_circle</v-icon>
