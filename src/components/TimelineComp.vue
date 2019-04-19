@@ -57,23 +57,49 @@ export default {
   props: ["addDays"],
   data() {
     return {
-      today: moment().add(this.$props.addDays, "days"),
-      tommorow: moment().add(this.$props.addDays + 1, "days"),
+      today: moment()
+        .add(this.$props.addDays, "days")
+        .set({ hour: 0, minute: 0, second: 0, millisecond: 0 }),
+      tommorow: moment()
+        .add(this.$props.addDays + 1, "days")
+        .set({ hour: 0, minute: 0, second: 0, millisecond: 0 }),
       tasks: [],
-      imgLink:
-        "https://scontent-icn1-1.cdninstagram.com/vp/33bb00bd8b055f8ade9a70a0c90f8161/5D4196F1/t51.2885-15/e35/56553780_2234820109909089_2768817975000366823_n.jpg?_nc_ht=scontent-icn1-1.cdninstagram.com"
+      follows: ["yI4k03Ot0oHpaEvgDCES"]
     };
   },
 
   firestore() {
-    return {
-      tasks: db
-        .collection("TASK")
-        .where("date", ">=", this.$data.today.format("YYYY-MM-DD"))
-        .where("date", "<", this.$data.tommorow.format("YYYY-MM-DD"))
-        .orderBy("date")
-        .orderBy("time")
-    };
+    const tasks = [];
+    // const follows = ["yI4k03Ot0oHpaEvgDCES", "Y7JZk93oOFrLpA1GoABN"];
+    const follows = [];
+
+    db.collection("TASK")
+      .where("timestamp", ">=", this.today.format("X") * 1)
+      .where("timestamp", "<", this.tommorow.format("X") * 1)
+      .orderBy("timestamp")
+      .get()
+      .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+          // doc.data() is never undefined for query doc snapshots
+          if (follows.length > 0) {
+            for (const follow of follows) {
+              if (doc.data().tags[follow]) {
+                tasks.push(doc.data());
+                break;
+              }
+            }
+          } else {
+            tasks.push(doc.data());
+          }
+        });
+      })
+      .catch(function(error) {
+        console.log("Error getting documents: ", error);
+      });
+
+    this.tasks = tasks;
+
+    return {};
   },
 
   computed: {
@@ -87,7 +113,7 @@ export default {
       );
       imgMap.set(
         "2",
-        "https://scontent-icn1-1.cdninstagram.com/vp/508ef164852082a64b250e635be43383/5D37542A/t51.2885-15/e35/56344611_288390578752370_4060979878760024738_n.jpg?_nc_ht=scontent-icn1-1.cdninstagram.com"
+        "https://scontent-icn1-1.cdninstagram.com/vp/7ae66a5dbcfb3e0bcafc253ec4372864/5D3F737F/t51.2885-15/e35/56319305_338618956787935_3099377071353244562_n.jpg?_nc_ht=scontent-icn1-1.cdninstagram.com"
       );
       imgMap.set(
         "4",
