@@ -107,7 +107,7 @@ export default {
         "tasksList",
         db
           .collection("TASK")
-          .where("tags.Y7JZk93oOFrLpA1GoABN", ">", today.format("X") * 1)
+          .where("tags." + this.$props.id, ">", today.format("X") * 1)
       )
         .then(document => {
           this.casts = document;
