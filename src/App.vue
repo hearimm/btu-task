@@ -51,26 +51,26 @@ export default {
     },
     items() {
       return [
-        { icon: "lightbulb_outline", text: "홈", route: "/", show: true },
+        { icon: "home", text: "홈", route: "/", show: true },
         {
-          icon: "lightbulb_outline",
+          icon: "date_range",
           text: "타임라인",
           route: "/timeline",
           show: true
         },
         {
-          icon: "touch_app",
-          text: "탐색(만드는중)",
+          icon: "explore",
+          text: "탐색",
           route: "/explorer",
           show: true
         },
         { divider: true },
         { heading: "일정" },
-        { icon: "add", text: "일정 관리", route: "/task", show: true },
-        { icon: "add", text: "출연자 관리", route: "/cast", show: true },
+        { icon: "event_note", text: "일정 관리", route: "/task", show: true },
+        { icon: "face", text: "출연자 관리", route: "/cast", show: true },
         { divider: true },
         {
-          icon: "archive",
+          icon: "person",
           text: "내정보(만드는중)",
           route: "/account",
           show: true
@@ -95,7 +95,21 @@ export default {
           show: true
         },
         { icon: "chat_bubble", text: "문의", route: "/ask", show: true },
-        { icon: "help", text: "FAQ(만드는중)", route: "/faq", show: true }
+        { icon: "help", text: "FAQ(만드는중)", route: "/faq", show: true },
+        { divider: true },
+        { heading: "자매품" },
+        {
+          icon: "send",
+          text: "텔레그램 배텐 공지 알리미",
+          route: "/telegram",
+          show: true
+        },
+        {
+          icon: "web",
+          text: "팟캐스트 정주행(팟죽)",
+          route: "/podjuk",
+          show: true
+        }
       ];
     }
   },
