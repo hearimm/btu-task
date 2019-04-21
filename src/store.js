@@ -49,6 +49,7 @@ export default new Vuex.Store({
         email: payload.email,
         displayName: payload.displayName,
         emailVerified: payload.emailVerified,
+        photoURL: payload.photoURL,
         login_dt: new Date()
       }, {
           merge: true
@@ -128,6 +129,11 @@ export default new Vuex.Store({
     displayName(state) {
       if (state.user !== null && state.user !== undefined) {
         return state.user.displayName;
+      }
+    },
+    photoURL(state) {
+      if (state.user !== null && state.user !== undefined) {
+        return state.user.photoURL;
       }
     },
     follows(state) {

@@ -35,7 +35,7 @@
         </v-img>
 
         <v-list three-line>
-          <template v-for="item in tasks">
+          <template v-for="item in tasksList">
             <v-list-tile :key="item['.key']" @click>
               <v-list-tile-action>
                 <v-icon color="indigo">{{item.icon}}</v-icon>
@@ -63,11 +63,13 @@
 <script>
 import { db } from "../firebase";
 import moment from "moment";
+
 export default {
   props: ["id"],
   data() {
     return {
       casts: null,
+      tasksList: [],
       fab: false
     };
   },
@@ -91,7 +93,6 @@ export default {
 
   firestore() {
     return {
-      tasks: db.collection("TASK").where("tags." + this.$props.id, ">", 0),
       cast: db.collection("CAST").doc(this.$props.id)
     };
   },

@@ -185,32 +185,40 @@ export default {
       this.chips = [...this.chips];
     },
     save() {
-      this.$firestore.tasks
-        .add({
-          title: this.title,
-          date: this.date,
-          time: this.time,
-          desc: this.desc,
-          cast: this.cast,
-          timestamp: this.timestamp,
-          tags: this.tags,
-          chips: this.chips,
-          castText: this.castText,
-          create_dt: new Date(),
-          create_uid: this.$store.getters["uid"],
-          create_name: this.$store.getters["displayName"],
-          update_dt: new Date(),
-          update_uid: this.$store.getters["uid"],
-          update_name: this.$store.getters["displayName"]
-        })
-        .then(docRef => {
-          console.log("Document written with ID: ", docRef.id);
-          this.hasSaved = true;
-          this.isEditing = !this.isEditing;
-        })
-        .catch(error => {
-          console.error("Error adding document: ", error);
-        });
+      // Get a new write batch
+      var batch = db.batch();
+      var saveDoc = {
+        title: this.title,
+        date: this.date,
+        time: this.time,
+        desc: this.desc,
+        cast: this.cast,
+        timestamp: this.timestamp,
+        tags: this.tags,
+        chips: this.chips,
+        castText: this.castText,
+        create_dt: new Date(),
+        create_uid: this.$store.getters["uid"],
+        create_name: this.$store.getters["displayName"],
+        update_dt: new Date(),
+        update_uid: this.$store.getters["uid"],
+        update_name: this.$store.getters["displayName"]
+      };
+
+      var newTaskRef = db.collection("TASK").doc();
+      batch.set(newTaskRef, saveDoc);
+
+      // Update the population of 'SF'
+      var revRef = newTaskRef.collection("REV").doc();
+
+      saveDoc["change_reason"] = "최초 저장";
+      batch.set(revRef, saveDoc);
+
+      // Commit the batch
+      batch.commit().then(() => {
+        this.hasSaved = true;
+        this.isEditing = !this.isEditing;
+      });
     },
     cancel() {
       this.$router.go(-1);
