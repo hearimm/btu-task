@@ -23,7 +23,7 @@
       <v-spacer></v-spacer>
 
       <v-btn color="success" @click="cancel">Cancel</v-btn>
-      <v-btn color="success" @click="deleteItem">Delete</v-btn>
+      <!-- <v-btn color="success" @click="deleteItem">Delete</v-btn> -->
       <v-btn color="success" @click="modifyItem">수정</v-btn>
     </v-card-actions>
     <v-snackbar v-model="hasSaved" :timeout="2000" absolute bottom left>저장되었습니다.</v-snackbar>
