@@ -13,6 +13,7 @@ import Task from "./views/Task.vue";
 import Cast from "./views/Cast.vue";
 import CastAdd from "./views/CastAdd.vue";
 import CastEdit from "./views/CastEdit.vue";
+import Admin from "./views/Admin.vue";
 import Auth from "./views/Auth.vue";
 import store from "./store";
 
@@ -106,6 +107,11 @@ export default new Router({
     name: "askAdd",
     beforeEnter: requireAuth,
     component: AskAdd
+  },
+  {
+    path: "/admin",
+    name: "admin",
+    component: Admin
   },
   {
     path: "/auth",

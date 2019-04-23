@@ -62,7 +62,23 @@
         </v-menu>
 
         <v-text-field v-model="desc" label="설명" required></v-text-field>
-
+        <v-select
+          v-model="broadcastType"
+          :items="broadcastTypes"
+          item-text="name"
+          item-value=".key"
+          label="방송타입"
+          chips
+          clearable
+          prepend-icon="tv"
+          return-object
+        >
+          <template v-slot:selection="data">
+            <v-chip :selected="data.selected" outline :color="data.item.color">
+              <strong>{{ data.item.name }}</strong>
+            </v-chip>
+          </template>
+        </v-select>
         <v-select
           v-model="chips"
           :items="casts"
@@ -86,8 +102,6 @@
         </v-select>
         <v-text-field v-model="castText" label="MC/출연자(기타)" required></v-text-field>
         <v-text-field v-model="castTextConcat" label="MC/출연자(저장양식)" readonly box required></v-text-field>
-        <v-text-field v-model="timestamp" label="timestamp(저장양식)" readonly box required></v-text-field>
-        <v-text-field v-model="tags" label="tags(저장양식)" readonly box required></v-text-field>
       </v-card-text>
     </v-form>
     <v-divider></v-divider>
@@ -126,14 +140,16 @@ export default {
       isEditing: null,
       model: null,
       isUpdating: false,
-      chips: []
+      chips: [],
+      broadcastType: null
     };
   },
 
   firestore() {
     return {
       tasks: db.collection("TASK"),
-      casts: db.collection("CAST").orderBy("name")
+      casts: db.collection("CAST").orderBy("name"),
+      broadcastTypes: db.collection("BROADCAST_TYPE").orderBy("name")
     };
   },
 
@@ -196,6 +212,8 @@ export default {
         timestamp: this.timestamp,
         tags: this.tags,
         chips: this.chips,
+        broadcastType: this.broadcastType,
+        color: this.broadcastType.color,
         castText: this.castText,
         create_dt: new Date(),
         create_uid: this.$store.getters["uid"],

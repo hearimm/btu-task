@@ -73,6 +73,23 @@
 
         <v-text-field v-model="desc" label="설명" required></v-text-field>
         <v-select
+          v-model="broadcastType"
+          :items="broadcastTypes"
+          item-text="name"
+          item-value=".key"
+          label="방송타입"
+          chips
+          clearable
+          prepend-icon="tv"
+          return-object
+        >
+          <template v-slot:selection="data">
+            <v-chip :selected="data.selected" outline :color="data.item.color">
+              <strong>{{ data.item.name }}</strong>
+            </v-chip>
+          </template>
+        </v-select>
+        <v-select
           v-model="chips"
           :items="casts"
           item-text="name"
@@ -153,6 +170,7 @@ export default {
       model: null,
       isUpdating: false,
       chips: [],
+      broadcastType: null,
       create_dt: "",
       create_name: "",
       update_uid: "",
@@ -170,7 +188,8 @@ export default {
     console.log(this.$props.id);
     return {
       tasks: db.collection("TASK"),
-      casts: db.collection("CAST").orderBy("name")
+      casts: db.collection("CAST").orderBy("name"),
+      broadcastTypes: db.collection("BROADCAST_TYPE").orderBy("name")
     };
   },
 
@@ -187,6 +206,7 @@ export default {
           this.castText = document.castText;
           this.chips = document.chips;
           this.create_dt = document.create_dt;
+          this.broadcastType = this.broadcastType;
           this.create_name = document.create_name;
           this.update_uid = document.update_uid;
           this.update_dt = document.update_dt;
@@ -277,7 +297,7 @@ export default {
       this.cast = this.rev.cast;
       this.castText = this.rev.castText;
       this.chips = this.rev.chips;
-
+      this.broadcastType = this.rev.broadcastType;
       this.create_dt = this.rev.create_dt;
       this.create_name = this.rev.create_name;
       this.update_uid = this.rev.update_uid;
@@ -296,6 +316,8 @@ export default {
           timestamp: this.timestamp,
           tags: this.tags,
           chips: this.chips,
+          broadcastType: this.broadcastType,
+          color: this.broadcastType.color,
           castText: this.castText,
           create_dt: new Date(),
           create_uid: this.$store.getters["uid"],
@@ -333,6 +355,8 @@ export default {
         timestamp: this.timestamp,
         tags: this.tags,
         chips: this.chips,
+        broadcastType: this.broadcastType,
+        color: this.broadcastType.color,
         castText: this.castText,
         update_dt: new Date(),
         update_uid: this.$store.getters["uid"],
