@@ -206,7 +206,7 @@ export default {
           this.castText = document.castText;
           this.chips = document.chips;
           this.create_dt = document.create_dt;
-          this.broadcastType = this.broadcastType;
+          this.broadcastType = document.broadcastType;
           this.create_name = document.create_name;
           this.update_uid = document.update_uid;
           this.update_dt = document.update_dt;
