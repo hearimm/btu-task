@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" max-width="400">
+  <v-card class="mx-auto" max-width="400" min-width="250">
     <v-card dark flat>
       <v-btn absolute bottom color="pink" right fab @click="goTaskAdd()">
         <v-icon>add</v-icon>
