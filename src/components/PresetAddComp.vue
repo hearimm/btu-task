@@ -196,9 +196,11 @@ export default {
         castText: this.castText,
         create_dt: new Date(),
         create_uid: this.$store.getters["uid"],
+        create_photoURL: this.$store.getters["photoURL"],
         create_name: this.$store.getters["displayName"],
         update_dt: new Date(),
         update_uid: this.$store.getters["uid"],
+        update_photoURL: this.$store.getters["photoURL"],
         update_name: this.$store.getters["displayName"]
       };
 
