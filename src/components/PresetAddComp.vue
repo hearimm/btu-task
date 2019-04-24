@@ -2,50 +2,13 @@
   <v-card class="hide-overflow">
     <v-toolbar card>
       <v-icon>question_answer</v-icon>
-      <v-toolbar-title>일정 추가</v-toolbar-title>
+      <v-toolbar-title>프리셋 추가</v-toolbar-title>
     </v-toolbar>
     <v-form v-model="valid">
       <v-card-text>
-        <v-select
-          v-model="preset"
-          :items="presets"
-          item-text="name"
-          item-value=".key"
-          label="프리셋"
-          chips
-          clearable
-          prepend-icon="tv"
-          return-object
-          @change="presetChanged"
-        >
-          <template v-slot:selection="data">
-            <v-chip :selected="data.selected" outline :color="data.item.color">
-              <strong>{{ data.item.name }}</strong>
-            </v-chip>
-          </template>
-        </v-select>
+        <v-text-field v-model="name" label="프리셋 이름" required></v-text-field>
         <v-text-field v-model="title" label="제목" required></v-text-field>
-        <v-menu
-          v-model="menuDate"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          lazy
-          transition="scale-transition"
-          offset-y
-          full-width
-          min-width="290px"
-        >
-          <template v-slot:activator="{ on }">
-            <v-text-field
-              v-model="date"
-              label="날짜를 선택해주세요."
-              prepend-icon="event"
-              readonly
-              v-on="on"
-            ></v-text-field>
-          </template>
-          <v-date-picker v-model="date" @input="menuDate = false"></v-date-picker>
-        </v-menu>
+        <!-- <v-text-field v-model="weekday" label="요일" required></v-text-field> -->
 
         <v-menu
           ref="menu"
@@ -145,8 +108,8 @@ export default {
     ];
 
     return {
-      preset: null,
-      menuDate: false,
+      name: "",
+      // weekday: "",
       menuTime: false,
       title: "",
       date: "",
@@ -209,12 +172,6 @@ export default {
         obj[item[".key"]] = this.timestamp;
       }
       return obj;
-    },
-    timestamp() {
-      return (
-        moment(this.date + " " + this.time, "YYYY-MM-DD HH:mm:ss").format("X") *
-        1
-      );
     }
   },
 
@@ -228,13 +185,11 @@ export default {
       // Get a new write batch
       var batch = db.batch();
       var saveDoc = {
+        name: this.name,
         title: this.title,
-        date: this.date,
         time: this.time,
         desc: this.desc,
         cast: this.cast,
-        timestamp: this.timestamp,
-        tags: this.tags,
         chips: this.chips,
         broadcastType: this.broadcastType,
         color: this.broadcastType.color,
@@ -247,7 +202,7 @@ export default {
         update_name: this.$store.getters["displayName"]
       };
 
-      var newTaskRef = db.collection("TASK").doc();
+      var newTaskRef = db.collection("PRESET").doc();
       batch.set(newTaskRef, saveDoc);
 
       // Update the population of 'SF'
@@ -264,25 +219,6 @@ export default {
     },
     cancel() {
       this.$router.go(-1);
-    },
-    presetChanged(item) {
-      if (item) {
-        this.title = item.title;
-        this.time = item.time;
-        this.desc = item.desc;
-        this.cast = item.cast;
-        this.castText = item.castText;
-        this.chips = item.chips;
-        this.broadcastType = item.broadcastType;
-      } else {
-        this.title = "";
-        this.time = "";
-        this.desc = "";
-        this.cast = "";
-        this.castText = "";
-        this.chips = [];
-        this.broadcastType = null;
-      }
     }
   }
 };
