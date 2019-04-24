@@ -67,7 +67,14 @@ export default {
         { divider: true },
         { heading: "일정" },
         { icon: "event_note", text: "일정 관리", route: "/task", show: true },
+        {
+          icon: "event_note",
+          text: "프리셋 관리",
+          route: "/preset",
+          show: true
+        },
         { icon: "face", text: "출연자 관리", route: "/cast", show: true },
+
         { divider: true },
         {
           icon: "person",

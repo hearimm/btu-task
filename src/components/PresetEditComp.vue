@@ -16,28 +16,9 @@
           @change="rollback_rev()"
         ></v-select>
         <v-text-field v-model="change_reason" label="수정 사유" required></v-text-field>
+        <v-text-field v-model="name" label="프리셋 이름" required></v-text-field>
         <v-text-field v-model="title" label="제목" required></v-text-field>
-        <v-menu
-          v-model="menuDate"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          lazy
-          transition="scale-transition"
-          offset-y
-          full-width
-          min-width="290px"
-        >
-          <template v-slot:activator="{ on }">
-            <v-text-field
-              v-model="date"
-              label="날짜를 선택해주세요."
-              prepend-icon="event"
-              readonly
-              v-on="on"
-            ></v-text-field>
-          </template>
-          <v-date-picker v-model="date" @input="menuDate = false"></v-date-picker>
-        </v-menu>
+        <!-- <v-text-field v-model="weekday" label="요일" required></v-text-field> -->
 
         <v-menu
           ref="menu"
@@ -127,16 +108,12 @@
       </v-card-text>
     </v-form>
     <v-divider></v-divider>
-    <v-card-actions v-if="id">
+    <v-card-actions>
       <v-spacer></v-spacer>
 
       <v-btn color="success" @click="cancel">Cancel</v-btn>
       <v-btn color="success" @click="deleteItem">Delete</v-btn>
       <v-btn color="success" @click="modifyItem">수정</v-btn>
-    </v-card-actions>
-    <v-card-actions v-else>
-      <v-spacer></v-spacer>
-      <v-btn color="success" @click="save">Save</v-btn>
     </v-card-actions>
     <v-snackbar v-model="hasSaved" :timeout="2000" absolute bottom left>저장되었습니다.</v-snackbar>
   </v-card>
@@ -156,10 +133,10 @@ export default {
     ];
 
     return {
-      menuDate: false,
+      name: "",
+      // weekday: "",
       menuTime: false,
       title: "",
-      date: "",
       time: "",
       desc: "",
       cast: "",
@@ -196,10 +173,11 @@ export default {
   mounted() {
     // Binding Docs
     if (this.$props.id) {
-      this.$binding("document", db.collection("TASK").doc(this.$props.id))
+      this.$binding("document", db.collection("PRESET").doc(this.$props.id))
         .then(document => {
+          this.name = document.name;
+          // this.weekday = document.weekday;
           this.title = document.title;
-          this.date = document.date;
           this.time = document.time;
           this.desc = document.desc;
           this.cast = document.cast;
@@ -221,7 +199,7 @@ export default {
       this.$binding(
         "revsCollection",
         db
-          .collection("TASK")
+          .collection("PRESET")
           .doc(this.$props.id)
           .collection("REV")
           .orderBy("update_dt", "desc")
@@ -256,23 +234,6 @@ export default {
       }
       return this.cast;
     },
-    tags() {
-      let obj = new Object();
-      const timestamp = this.timestamp;
-      if (!shared.isIterable(this.chips)) {
-        return null;
-      }
-      for (const item of this.chips) {
-        obj[item[".key"]] = this.timestamp;
-      }
-      return obj;
-    },
-    timestamp() {
-      return (
-        moment(this.date + " " + this.time, "YYYY-MM-DD HH:mm:ss").format("X") *
-        1
-      );
-    },
     computed_update_dt() {
       if (this.update_dt) {
         return moment(this.update_dt.toDate()).fromNow();
@@ -290,8 +251,9 @@ export default {
     },
     rollback_rev(item) {
       console.log(this.rev);
+      this.name = this.rev.name;
+      // this.weekday = this.rev.weekday;
       this.title = this.rev.title;
-      this.date = this.rev.date;
       this.time = this.rev.time;
       this.desc = this.rev.desc;
       this.cast = this.rev.cast;
@@ -305,36 +267,6 @@ export default {
       this.update_photoURL = this.rev.update_photoURL;
       this.update_name = this.rev.update_name;
     },
-    save() {
-      this.$firestore.tasks
-        .add({
-          title: this.title,
-          date: this.date,
-          time: this.time,
-          desc: this.desc,
-          cast: this.cast,
-          timestamp: this.timestamp,
-          tags: this.tags,
-          chips: this.chips,
-          broadcastType: this.broadcastType,
-          color: this.broadcastType.color,
-          castText: this.castText,
-          create_dt: new Date(),
-          create_uid: this.$store.getters["uid"],
-          create_name: this.$store.getters["displayName"],
-          update_dt: new Date(),
-          update_uid: this.$store.getters["uid"],
-          update_name: this.$store.getters["displayName"]
-        })
-        .then(docRef => {
-          console.log("Document written with ID: ", docRef.id);
-          this.hasSaved = true;
-          this.isEditing = !this.isEditing;
-        })
-        .catch(error => {
-          console.error("Error adding document: ", error);
-        });
-    },
     deleteItem() {
       this.$firestore.tasks
         .doc(this.$props.id)
@@ -347,13 +279,12 @@ export default {
 
       // Set the value of 'NYC'
       var nowDoc = {
+        name: this.name,
+        // weekday: this.weekday,
         title: this.title,
-        date: this.date,
         time: this.time,
         desc: this.desc,
         cast: this.cast,
-        timestamp: this.timestamp,
-        tags: this.tags,
         chips: this.chips,
         broadcastType: this.broadcastType,
         color: this.broadcastType.color,
@@ -363,12 +294,12 @@ export default {
         update_photoURL: this.$store.getters["photoURL"],
         update_name: this.$store.getters["displayName"]
       };
-      var taskRef = db.collection("TASK").doc(this.$props.id);
+      var taskRef = db.collection("PRESET").doc(this.$props.id);
       batch.update(taskRef, nowDoc);
 
       // Update the population of 'SF'
       var revRef = db
-        .collection("TASK")
+        .collection("PRESET")
         .doc(this.$props.id)
         .collection("REV")
         .doc();
