@@ -2,7 +2,7 @@
   <v-card class="hide-overflow">
     <v-toolbar card>
       <v-icon>question_answer</v-icon>
-      <v-toolbar-title>일정 추가</v-toolbar-title>
+      <v-toolbar-title>프리셋 수정</v-toolbar-title>
     </v-toolbar>
     <v-form v-model="valid">
       <v-card-text>

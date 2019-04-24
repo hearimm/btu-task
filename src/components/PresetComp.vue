@@ -12,13 +12,11 @@
             <AskFormComp v-model="showAskForm"/>
           </v-btn>
         </v-toolbar>
-        <v-list three-line>
+        <v-list>
           <template v-for="item in tasks">
             <v-list-tile :key="item['.key']" @click="goDetail(item['.key'])">
               <v-list-tile-content>
-                <v-list-tile-title v-html="item.title"></v-list-tile-title>
-                <v-list-tile-sub-title v-html="item.desc" right></v-list-tile-sub-title>
-                <v-list-tile-sub-title right>{{item.date + " "+ item.time}}</v-list-tile-sub-title>
+                <v-list-tile-title v-html="item.name"></v-list-tile-title>
               </v-list-tile-content>
               <v-list-tile-action>
                 <v-btn icon ripple>
@@ -46,7 +44,7 @@ export default {
   }),
   firestore() {
     return {
-      tasks: db.collection("PRESET")
+      tasks: db.collection("PRESET").orderBy("name")
     };
   },
   methods: {

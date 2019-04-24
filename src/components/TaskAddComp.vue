@@ -11,7 +11,7 @@
           :items="presets"
           item-text="name"
           item-value=".key"
-          label="프리셋"
+          label="프리셋 불러오기"
           chips
           clearable
           prepend-icon="tv"
