@@ -162,7 +162,6 @@ export default {
   },
 
   firestore() {
-    console.log(this.$props.id);
     return {
       tasks: db.collection("TASK"),
       casts: db.collection("CAST").orderBy("name"),
@@ -250,7 +249,6 @@ export default {
       this.chips = [...this.chips];
     },
     rollback_rev(item) {
-      console.log(this.rev);
       this.name = this.rev.name;
       // this.weekday = this.rev.weekday;
       this.title = this.rev.title;
@@ -309,7 +307,6 @@ export default {
 
       // Commit the batch
       batch.commit().then(() => {
-        console.log(this);
         this.$router.go(-1);
       });
     },

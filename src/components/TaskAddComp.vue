@@ -201,7 +201,6 @@ export default {
     },
     tags() {
       let obj = new Object();
-      const timestamp = this.timestamp;
       if (!shared.isIterable(this.chips)) {
         return null;
       }

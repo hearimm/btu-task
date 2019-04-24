@@ -68,7 +68,7 @@ export default {
         { heading: "일정" },
         { icon: "event_note", text: "일정 관리", route: "/task", show: true },
         {
-          icon: "event_note",
+          icon: "label",
           text: "프리셋 관리",
           route: "/preset",
           show: true
