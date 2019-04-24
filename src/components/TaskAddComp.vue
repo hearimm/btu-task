@@ -172,7 +172,11 @@ export default {
       for (const item of this.chips) {
         result.push(item.name);
       }
-      this.cast = result.join(",") + this.castText;
+      if (this.castText.length > 0) {
+        this.cast = result.join(",") + "," + this.castText;
+      } else {
+        this.cast = result.join(",");
+      }
       return this.cast;
     },
     tags() {
