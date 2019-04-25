@@ -24,7 +24,7 @@
       <v-toolbar-side-icon @click="drawer = !drawer"></v-toolbar-side-icon>
       <span class="title ml-3 mr-5">
         BTU&nbsp;
-        <span class="font-weight-light">Task</span>
+        <span class="font-weight-light">Today</span>
       </span>
       <v-text-field solo-inverted flat hide-details label="Search" prepend-inner-icon="search"></v-text-field>
       <v-spacer></v-spacer>
