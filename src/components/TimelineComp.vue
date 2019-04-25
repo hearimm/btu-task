@@ -5,15 +5,7 @@
         <v-icon>add</v-icon>
       </v-btn>
       <v-card-title class="pa-2 purple lighten-3">
-        <v-btn icon>
-          <v-icon>mdi-menu</v-icon>
-        </v-btn>
         <h3 class="title font-weight-light text-xs-center grow">Timeline</h3>
-        <v-avatar>
-          <v-img
-            src="https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&accessoriesType=Blank&hairColor=BrownDark&facialHairType=Blank&clotheType=BlazerSweater&eyeType=Close&eyebrowType=UpDown&mouthType=Smile&skinColor=Light"
-          ></v-img>
-        </v-avatar>
       </v-card-title>
       <v-img
         :src="computedImgLink"

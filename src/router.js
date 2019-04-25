@@ -16,6 +16,7 @@ import PresetEdit from "./views/PresetEdit.vue";
 import Cast from "./views/Cast.vue";
 import CastAdd from "./views/CastAdd.vue";
 import CastEdit from "./views/CastEdit.vue";
+import Account from "./views/Account.vue";
 import Admin from "./views/Admin.vue";
 import Auth from "./views/Auth.vue";
 import store from "./store";
@@ -132,6 +133,11 @@ export default new Router({
       name: "askAdd",
       beforeEnter: requireAuth,
       component: AskAdd
+    },
+    {
+      path: "/account",
+      name: "account",
+      component: Account
     },
     {
       path: "/admin",

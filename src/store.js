@@ -4,7 +4,9 @@ import {
   db,
   firebaseApp
 } from './firebase';
-import { get } from 'https';
+import {
+  get
+} from 'https';
 
 Vue.use(Vuex)
 
@@ -46,12 +48,12 @@ export default new Vuex.Store({
     }, payload) => {
       commit("setUser", payload);
       db.collection("USER").doc(payload.uid).set({
-        email: payload.email,
-        displayName: payload.displayName,
-        emailVerified: payload.emailVerified,
-        photoURL: payload.photoURL,
-        login_dt: new Date()
-      }, {
+          email: payload.email,
+          displayName: payload.displayName,
+          emailVerified: payload.emailVerified,
+          photoURL: payload.photoURL,
+          login_dt: new Date()
+        }, {
           merge: true
         }).then(
           console.log("success")
@@ -120,6 +122,13 @@ export default new Vuex.Store({
   getters: {
     isUserAuthenticated(state) {
       return state.user !== null && state.user !== undefined;
+    },
+    isUserAdmin(state) {
+      if (state.role !== null && state.role !== undefined && state.role === 'admin') {
+        return state.role;
+      } else {
+        return false;
+      }
     },
     uid(state) {
       if (state.user !== null && state.user !== undefined) {

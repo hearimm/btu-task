@@ -2,52 +2,19 @@
   <v-layout justify-center>
     <v-flex xs12 sm6>
       <v-card>
-        <v-container fluid grid-list-md>
-          <v-layout row wrap>
-            <v-flex v-for="card in casts" :key="card['.key']" v-bind="{ [`xs${card.flex}`]: true }">
-              <v-card>
-                <v-img
-                  :src="card.photoLink"
-                  height="200px"
-                  gradient="to top, rgba(0,0,0,.44), rgba(0,0,0,.44)"
-                  @click="routeTo(card['.key'])"
-                >
-                  <v-container fill-height fluid pa-2>
-                    <v-layout fill-height>
-                      <v-flex xs12 align-end flexbox>
-                        <span class="headline white--text" v-text="card.name"></span>
-                      </v-flex>
-                    </v-layout>
-                  </v-container>
-                </v-img>
-
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-
-                  <v-btn v-if="isFollows(card['.key'])" icon @click="deleteFollow(card['.key'])">
-                    <v-icon color="pink">favorite</v-icon>
-                  </v-btn>
-                  <v-btn v-else icon @click="addFollow(card['.key'])">
-                    <v-icon>favorite</v-icon>
-                  </v-btn>
-                  <v-btn icon>
-                    <v-icon>bookmark</v-icon>
-                  </v-btn>
-                  <v-btn icon>
-                    <v-icon>share</v-icon>
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-flex>
-          </v-layout>
-        </v-container>
+        <FollowCardComp :items="casts"/>
       </v-card>
     </v-flex>
   </v-layout>
 </template>
 <script>
 import { db } from "../firebase";
+import FollowCardComp from "../components/FollowCardComp";
+
 export default {
+  components: {
+    FollowCardComp
+  },
   data() {
     return {};
   },
@@ -59,32 +26,7 @@ export default {
     };
   },
 
-  computed: {
-    follows() {
-      return this.$store.getters["follows"];
-    }
-  },
-
   methods: {
-    isFollows(id) {
-      return this.$store.getters["isFollows"](id);
-    },
-    routeTo(value) {
-      console.log(value);
-      this.$router.push({ name: "detail", params: { id: value } });
-    },
-    addFollow(id) {
-      if (!this.$store.getters["isUserAuthenticated"]) {
-        return this.$router.push("/auth");
-      }
-      this.$store.dispatch("addFollows", id);
-    },
-    deleteFollow(id) {
-      if (!this.$store.getters["isUserAuthenticated"]) {
-        return this.$router.push("/auth");
-      }
-      this.$store.dispatch("deleteFollows", id);
-    }
   }
 };
 </script>

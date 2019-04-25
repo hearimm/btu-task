@@ -133,6 +133,7 @@
       <v-btn color="success" @click="cancel">Cancel</v-btn>
       <v-btn color="success" @click="deleteItem">Delete</v-btn>
       <v-btn color="success" @click="modifyItem">수정</v-btn>
+      <v-btn color="success" @click="save">새로저장</v-btn>
     </v-card-actions>
     <v-card-actions v-else>
       <v-spacer></v-spacer>
@@ -306,34 +307,44 @@ export default {
       this.update_name = this.rev.update_name;
     },
     save() {
-      this.$firestore.tasks
-        .add({
-          title: this.title,
-          date: this.date,
-          time: this.time,
-          desc: this.desc,
-          cast: this.cast,
-          timestamp: this.timestamp,
-          tags: this.tags,
-          chips: this.chips,
-          broadcastType: this.broadcastType,
-          color: this.broadcastType.color,
-          castText: this.castText,
-          create_dt: new Date(),
-          create_uid: this.$store.getters["uid"],
-          create_name: this.$store.getters["displayName"],
-          update_dt: new Date(),
-          update_uid: this.$store.getters["uid"],
-          update_name: this.$store.getters["displayName"]
-        })
-        .then(docRef => {
-          console.log("Document written with ID: ", docRef.id);
-          this.hasSaved = true;
-          this.isEditing = !this.isEditing;
-        })
-        .catch(error => {
-          console.error("Error adding document: ", error);
-        });
+      // Get a new write batch
+      var batch = db.batch();
+      var saveDoc = {
+        title: this.title,
+        date: this.date,
+        time: this.time,
+        desc: this.desc,
+        cast: this.cast,
+        timestamp: this.timestamp,
+        tags: this.tags,
+        chips: this.chips,
+        broadcastType: this.broadcastType,
+        color: this.broadcastType.color,
+        castText: this.castText,
+        create_dt: new Date(),
+        create_uid: this.$store.getters["uid"],
+        create_photoURL: this.$store.getters["photoURL"],
+        create_name: this.$store.getters["displayName"],
+        update_dt: new Date(),
+        update_uid: this.$store.getters["uid"],
+        update_photoURL: this.$store.getters["photoURL"],
+        update_name: this.$store.getters["displayName"]
+      };
+
+      var newTaskRef = db.collection("TASK").doc();
+      batch.set(newTaskRef, saveDoc);
+
+      // Update the population of 'SF'
+      var revRef = newTaskRef.collection("REV").doc();
+
+      saveDoc["change_reason"] = "최초 저장";
+      batch.set(revRef, saveDoc);
+
+      // Commit the batch
+      batch.commit().then(() => {
+        this.hasSaved = true;
+        this.isEditing = !this.isEditing;
+      });
     },
     deleteItem() {
       this.$firestore.tasks

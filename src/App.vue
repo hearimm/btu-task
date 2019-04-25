@@ -78,9 +78,9 @@ export default {
         { divider: true },
         {
           icon: "person",
-          text: "내정보(만드는중)",
+          text: "내정보",
           route: "/account",
-          show: true
+          show: this.$store.getters["isUserAuthenticated"]
         },
         {
           icon: "exit_to_app",
@@ -99,10 +99,15 @@ export default {
           icon: "settings",
           text: "설정(만드는중)",
           route: "/setting",
-          show: true
+          show: this.$store.getters["isUserAdmin"]
         },
         { icon: "chat_bubble", text: "문의", route: "/ask", show: true },
-        { icon: "help", text: "FAQ(만드는중)", route: "/faq", show: true },
+        {
+          icon: "help",
+          text: "FAQ(만드는중)",
+          route: "/faq",
+          show: this.$store.getters["isUserAdmin"]
+        },
         { divider: true },
         { heading: "자매품" },
         {
@@ -116,6 +121,12 @@ export default {
           text: "팟캐스트 정주행(팟죽)",
           route: "/podjuk",
           show: true
+        },
+        {
+          icon: "web",
+          text: "관리자",
+          route: "/admin",
+          show: this.$store.getters["isUserAdmin"]
         }
       ];
     }
