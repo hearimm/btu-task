@@ -79,7 +79,7 @@ export default {
         {
           icon: "person",
           text: "내정보",
-          route: "/account",
+          route: "/account/" + this.$store.getters["uid"],
           show: this.$store.getters["isUserAuthenticated"]
         },
         {

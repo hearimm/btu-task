@@ -135,8 +135,9 @@ export default new Router({
       component: AskAdd
     },
     {
-      path: "/account",
+      path: "/account/:id",
       name: "account",
+      props: true,
       component: Account
     },
     {

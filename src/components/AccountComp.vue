@@ -6,7 +6,7 @@
           <v-toolbar-title>팔로잉</v-toolbar-title>
         </v-toolbar>
 
-        <FollowCardComp :items="items"/>
+        <FollowCardComp :items="items" :isEditable="isEditable"/>
       </v-card>
     </v-flex>
   </v-layout>
@@ -15,6 +15,7 @@
 import { db } from "../firebase";
 import FollowCardComp from "../components/FollowCardComp";
 export default {
+  props: ["id"],
   components: {
     FollowCardComp
   },
@@ -48,6 +49,11 @@ export default {
 
     this.items = items;
     return {};
+  },
+  computed: {
+    isEditable() {
+      return this.$store.getters["uid"] === this.$props.id;
+    }
   },
   methods: {}
 };

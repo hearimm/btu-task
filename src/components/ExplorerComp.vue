@@ -2,7 +2,7 @@
   <v-layout justify-center>
     <v-flex xs12 sm6>
       <v-card>
-        <FollowCardComp :items="casts"/>
+        <FollowCardComp :items="casts" :isEditable="true"/>
       </v-card>
     </v-flex>
   </v-layout>
@@ -26,7 +26,6 @@ export default {
     };
   },
 
-  methods: {
-  }
+  methods: {}
 };
 </script>

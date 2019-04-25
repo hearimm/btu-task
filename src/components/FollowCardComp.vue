@@ -18,7 +18,7 @@
             </v-container>
           </v-img>
 
-          <v-card-actions>
+          <v-card-actions v-if="isEditable">
             <v-spacer></v-spacer>
 
             <v-btn v-if="isFollows(card['.key'])" icon @click="deleteFollow(card['.key'])">
@@ -38,7 +38,7 @@
 <script>
 import { db } from "../firebase";
 export default {
-  props: ["items"],
+  props: ["items", "isEditable"],
   data: () => ({}),
   methods: {
     goDetail(id) {
