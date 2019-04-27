@@ -110,6 +110,10 @@ export default {
         "4",
         "https://scontent-icn1-1.cdninstagram.com/vp/b9bba1eeb750ea3f43eafae2ff0a61a8/5D731E8D/t51.2885-15/e35/55837738_339904723230823_6511028640868583943_n.jpg?_nc_ht=scontent-icn1-1.cdninstagram.com"
       );
+      imgMap.set(
+        "6",
+        "https://scontent-icn1-1.cdninstagram.com/vp/2d3be816658336420cab170bc94f4cd9/5D3B6625/t51.2885-15/e35/59390479_327928747761576_3785550564376759797_n.jpg?_nc_ht=scontent-icn1-1.cdninstagram.com"
+      );
 
       const week = moment()
         .add(this.$props.addDays, "days")
