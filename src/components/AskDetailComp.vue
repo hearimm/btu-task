@@ -8,16 +8,26 @@
         </v-toolbar>
         <v-form v-model="valid">
           <v-card-text>
-            <v-text-field v-model="title" label="제목" readonly required></v-text-field>
-            <v-textarea label="설명" v-model="desc" readonly></v-textarea>
+            <v-text-field v-model="title" label="제목" :readonly="!isPermission(uid)" required></v-text-field>
+            <v-textarea label="설명" v-model="desc" :readonly="!isPermission(uid)"></v-textarea>
           </v-card-text>
         </v-form>
         <v-divider></v-divider>
         <v-card-actions v-if="isPermission(uid)">
           <v-spacer></v-spacer>
           <v-btn color="success" @click="cancel">Cancel</v-btn>
-          <v-btn color="success" @click="deleteItem">Delete</v-btn>
-          <v-btn color="success" @click="modifyItem">수정</v-btn>
+          <v-btn
+            color="success"
+            :loading="loadingDelete"
+            :disabled="loadingDelete"
+            @click="deleteItem"
+          >Delete</v-btn>
+          <v-btn
+            color="success"
+            :loading="loadingModify"
+            :disabled="loadingModify"
+            @click="modifyItem"
+          >수정</v-btn>
         </v-card-actions>
         <v-snackbar
           v-model="hasSaved"
@@ -115,7 +125,9 @@ export default {
       answers: [],
       answer: {},
       newAnswerDesc: "",
-      uid: ""
+      uid: "",
+      loadingModify: false,
+      loadingDelete: false
     };
   },
 
@@ -202,12 +214,17 @@ export default {
         });
     },
     deleteItem() {
+      this.loadingDelete = true;
       this.$firestore.askCollection
         .doc(this.$props.id)
         .delete()
-        .then(this.$router.go(-1));
+        .then(() => {
+          this.loadingDelete = false;
+          this.$router.go(-1);
+        });
     },
     modifyItem() {
+      this.loadingModify = true;
       this.$firestore.askCollection
         .doc(this.$props.id)
         .update({
@@ -215,7 +232,10 @@ export default {
           desc: this.desc,
           update_dt: new Date()
         })
-        .then(this.$router.go(-1));
+        .then(() => {
+          this.loadingModify = false;
+          this.$router.go(-1);
+        });
     },
     cancel() {
       this.$router.go(-1);

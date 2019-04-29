@@ -7,10 +7,7 @@
 
           <v-spacer></v-spacer>
 
-          <v-btn right color="primary" @click="goTaskAdd()">
-            일정추가하기
-            <AskFormComp v-model="showAskForm"/>
-          </v-btn>
+          <v-btn right color="primary" @click="goTaskAdd()">일정추가하기</v-btn>
         </v-toolbar>
         <v-list three-line>
           <template v-for="item in tasks">
@@ -39,16 +36,17 @@ import AskFormComp from "./AskFormComp";
 import moment from "moment";
 import { db } from "../firebase";
 export default {
-  data: () => ({
-    today: moment(),
-    showAskForm: false,
-    tasks: []
-  }),
+  data() {
+    return {
+      today: moment(),
+      tasks: []
+    };
+  },
   firestore() {
     return {
       tasks: db
         .collection("TASK")
-        .where("date", ">=", this.$data.today.format("YYYY-MM-DD"))
+        .where("date", ">=", this.today.format("YYYY-MM-DD"))
         .orderBy("date")
         .orderBy("time")
     };
@@ -60,9 +58,6 @@ export default {
     goTaskAdd() {
       this.$router.push("/taskAdd");
     }
-  },
-  components: {
-    AskFormComp
   }
 };
 </script>

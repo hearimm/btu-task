@@ -7,10 +7,7 @@
 
           <v-spacer></v-spacer>
 
-          <v-btn right color="primary" @click="goAdd()">
-            추가하기
-            <AskFormComp v-model="showAskForm"/>
-          </v-btn>
+          <v-btn right color="primary" @click="goAdd()">추가하기</v-btn>
         </v-toolbar>
         <v-list>
           <template v-for="item in tasks">
@@ -32,8 +29,6 @@
 </template>
 
 <script>
-import AskFormComp from "./AskFormComp";
-
 import moment from "moment";
 import { db } from "../firebase";
 export default {
@@ -54,9 +49,6 @@ export default {
     goAdd() {
       this.$router.push("/presetAdd");
     }
-  },
-  components: {
-    AskFormComp
   }
 };
 </script>

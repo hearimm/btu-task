@@ -15,7 +15,7 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" @click="save">Save</v-btn>
+          <v-btn color="primary" :loading="loadingSave" :disabled="loadingSave" @click="save">Save</v-btn>
         </v-card-actions>
         <v-snackbar
           v-model="hasSaved"
@@ -43,7 +43,8 @@ export default {
       title: "",
       desc: "",
       valid: false,
-      hasSaved: false
+      hasSaved: false,
+      loadingSave: false
     };
   },
 
@@ -56,6 +57,7 @@ export default {
   methods: {
     allowedStep: m => m % 10 === 0,
     save() {
+      this.loadingSave = true;
       this.$firestore.askCollection
         .add({
           title: this.title,
@@ -67,10 +69,12 @@ export default {
         })
         .then(docRef => {
           console.log("Document written with ID: ", docRef.id);
+          this.loadingSave = false;
           this.$router.go(-1);
         })
         .catch(error => {
           console.error("Error adding document: ", error);
+          this.loadingSave = false;
         });
     },
     cancel() {

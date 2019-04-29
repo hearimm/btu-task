@@ -10,7 +10,7 @@
           v-model="rev"
           :items="revs"
           label="Rev"
-          item-text="change_reason"
+          :item-text="revItemText"
           item-value=".key"
           return-object
           @change="rollback_rev()"
@@ -112,8 +112,18 @@
       <v-spacer></v-spacer>
 
       <v-btn color="success" @click="cancel">Cancel</v-btn>
-      <v-btn color="success" @click="deleteItem">Delete</v-btn>
-      <v-btn color="success" @click="modifyItem">수정</v-btn>
+      <v-btn
+        color="success"
+        :loading="loadingDelete"
+        :disabled="loadingDelete"
+        @click="deleteItem"
+      >Delete</v-btn>
+      <v-btn
+        color="success"
+        :loading="loadingModify"
+        :disabled="loadingModify"
+        @click="modifyItem"
+      >수정</v-btn>
     </v-card-actions>
     <v-snackbar v-model="hasSaved" :timeout="2000" absolute bottom left>저장되었습니다.</v-snackbar>
   </v-card>
@@ -157,13 +167,14 @@ export default {
       document: null,
       change_reason: "",
       revs: [],
-      rev: null
+      rev: null,
+      loadingModify: false,
+      loadingDelete: false
     };
   },
 
   firestore() {
     return {
-      tasks: db.collection("TASK"),
       casts: db.collection("CAST").orderBy("name"),
       broadcastTypes: db.collection("BROADCAST_TYPE").orderBy("name")
     };
@@ -248,6 +259,15 @@ export default {
       this.chips.splice(this.chips.indexOf(item), 1);
       this.chips = [...this.chips];
     },
+    revItemText(item) {
+      return (
+        item.update_name +
+        " - " +
+        moment(item.update_dt.toDate()).format("lll") +
+        " - " +
+        item.change_reason
+      );
+    },
     rollback_rev(item) {
       this.name = this.rev.name;
       // this.weekday = this.rev.weekday;
@@ -266,13 +286,15 @@ export default {
       this.update_name = this.rev.update_name;
     },
     deleteItem() {
-      this.$firestore.tasks
+      this.loadingDelete = true;
+      db.collection("PRESET")
         .doc(this.$props.id)
         .delete()
         .then(this.$router.go(-1));
     },
     modifyItem() {
       // Get a new write batch
+      this.loadingModify = true;
       var batch = db.batch();
 
       // Set the value of 'NYC'
@@ -307,6 +329,7 @@ export default {
 
       // Commit the batch
       batch.commit().then(() => {
+        this.loadingModify = true;
         this.$router.go(-1);
       });
     },

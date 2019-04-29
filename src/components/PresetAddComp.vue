@@ -88,7 +88,7 @@
     <v-divider></v-divider>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="success" @click="save">Save</v-btn>
+      <v-btn color="success" :loading="loadingSave" :disabled="loadingSave" @click="save">Save</v-btn>
     </v-card-actions>
     <v-snackbar v-model="hasSaved" :timeout="2000" absolute bottom left>저장되었습니다.</v-snackbar>
   </v-card>
@@ -123,7 +123,8 @@ export default {
       model: null,
       isUpdating: false,
       chips: [],
-      broadcastType: null
+      broadcastType: null,
+      loadingSave: false
     };
   },
 
@@ -183,6 +184,8 @@ export default {
     },
     save() {
       // Get a new write batch
+      this.loadingSave = true;
+
       var batch = db.batch();
       var saveDoc = {
         name: this.name,
@@ -217,6 +220,7 @@ export default {
       batch.commit().then(() => {
         this.hasSaved = true;
         this.isEditing = !this.isEditing;
+        this.loadingSave = false;
       });
     },
     cancel() {

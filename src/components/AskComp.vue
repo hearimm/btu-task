@@ -4,13 +4,8 @@
       <v-card>
         <v-toolbar color="cyan" dark>
           <v-toolbar-title>문의/질문</v-toolbar-title>
-
           <v-spacer></v-spacer>
-
-          <v-btn right color="primary" @click.stop="goAddPage()">
-            문의하기
-            <AskFormComp v-model="showAskForm"/>
-          </v-btn>
+          <v-btn right color="primary" @click.stop="goAddPage()">문의하기</v-btn>
         </v-toolbar>
         <v-list three-line>
           <template v-for="item in items">
@@ -28,13 +23,11 @@
 </template>
 
 <script>
-import AskFormComp from "./AskFormComp";
 import { db } from "../firebase";
 
 export default {
   data() {
     return {
-      showAskForm: false,
       items: []
     };
   },
@@ -60,9 +53,6 @@ export default {
     deleteItem() {
       console.log("deleteItem");
     }
-  },
-  components: {
-    AskFormComp
   }
 };
 </script>

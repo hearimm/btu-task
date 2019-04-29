@@ -10,7 +10,7 @@
           v-model="rev"
           :items="revs"
           label="Rev"
-          item-text="change_reason"
+          :item-text="revItemText"
           item-value=".key"
           return-object
           @change="rollback_rev()"
@@ -131,9 +131,19 @@
       <v-spacer></v-spacer>
 
       <v-btn color="success" @click="cancel">Cancel</v-btn>
-      <v-btn color="success" @click="deleteItem">Delete</v-btn>
-      <v-btn color="success" @click="modifyItem">수정</v-btn>
-      <v-btn color="success" @click="save">새로저장</v-btn>
+      <v-btn
+        color="success"
+        :loading="loadingDelete"
+        :disabled="loadingDelete"
+        @click="deleteItem"
+      >Delete</v-btn>
+      <v-btn
+        color="success"
+        :loading="loadingModify"
+        :disabled="loadingModify"
+        @click="modifyItem"
+      >수정</v-btn>
+      <v-btn color="success" :loading="loadingSave" :disabled="loadingSave" @click="save">새로저장</v-btn>
     </v-card-actions>
     <v-card-actions v-else>
       <v-spacer></v-spacer>
@@ -181,14 +191,15 @@ export default {
       document: null,
       change_reason: "",
       revs: [],
-      rev: null
+      rev: null,
+      loadingSave: false,
+      loadingModify: false,
+      loadingDelete: false
     };
   },
 
   firestore() {
-    console.log(this.$props.id);
     return {
-      tasks: db.collection("TASK"),
       casts: db.collection("CAST").orderBy("name"),
       broadcastTypes: db.collection("BROADCAST_TYPE").orderBy("name")
     };
@@ -289,8 +300,16 @@ export default {
       this.chips.splice(this.chips.indexOf(item), 1);
       this.chips = [...this.chips];
     },
+    revItemText(item) {
+      return (
+        item.update_name +
+        " - " +
+        moment(item.update_dt.toDate()).format("lll") +
+        " - " +
+        item.change_reason
+      );
+    },
     rollback_rev(item) {
-      console.log(this.rev);
       this.title = this.rev.title;
       this.date = this.rev.date;
       this.time = this.rev.time;
@@ -308,6 +327,8 @@ export default {
     },
     save() {
       // Get a new write batch
+      this.loadingSave = true;
+
       var batch = db.batch();
       var saveDoc = {
         title: this.title,
@@ -344,15 +365,19 @@ export default {
       batch.commit().then(() => {
         this.hasSaved = true;
         this.isEditing = !this.isEditing;
+        this.loadingSave = false;
       });
     },
     deleteItem() {
-      this.$firestore.tasks
+      this.loadingDelete = true;
+      db.collection("TASK")
         .doc(this.$props.id)
         .delete()
         .then(this.$router.go(-1));
     },
     modifyItem() {
+      this.loadingModify = true;
+
       // Get a new write batch
       var batch = db.batch();
 
@@ -389,7 +414,7 @@ export default {
 
       // Commit the batch
       batch.commit().then(() => {
-        console.log(this);
+        this.loadingModify = false;
         this.$router.go(-1);
       });
     },

@@ -10,8 +10,18 @@
         <v-textarea label="답변" v-model="desc" :readonly="!isPermission"></v-textarea>
         <v-card-actions v-if="isPermission">
           <v-spacer></v-spacer>
-          <v-btn color="success" @click="deleteAnswer">Delete</v-btn>
-          <v-btn color="success" @click="modifyAnswer">수정</v-btn>
+          <v-btn
+            color="success"
+            :loading="loadingDelete"
+            :disabled="loadingDelete"
+            @click="deleteAnswer"
+          >Delete</v-btn>
+          <v-btn
+            color="success"
+            :loading="loadingModify"
+            :disabled="loadingModify"
+            @click="modifyAnswer"
+          >수정</v-btn>
         </v-card-actions>
       </v-form>
       <v-list>
@@ -65,7 +75,9 @@ export default {
       askNewComment: "",
       answerNewComment: "",
       comments: [],
-      uid: ""
+      uid: "",
+      loadingModify: false,
+      loadingDelete: false
     };
   },
 
@@ -157,14 +169,20 @@ export default {
         });
     },
     deleteAnswer() {
+      this.loadingDelete = true;
       this.$firestore.answerDocument
         .delete()
-        .then(console.log("delete Answer"))
+        .then(() => {
+          console.log("delete Answer");
+          this.loadingDelete = false;
+        })
         .catch(err => {
+          this.loadingDelete = false;
           console.log(err);
         });
     },
     modifyAnswer() {
+      this.loadingModify = true;
       this.$firestore.answerDocument
         .set(
           {
@@ -173,8 +191,11 @@ export default {
           },
           { merge: true }
         )
-        .then(console.log("modify Answer"))
+        .then(() => {
+          this.loadingModify = false;
+        })
         .catch(err => {
+          this.loadingModify = false;
           console.log(err);
         });
     }
