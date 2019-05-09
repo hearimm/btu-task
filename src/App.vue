@@ -59,6 +59,12 @@ export default {
           show: true
         },
         {
+          icon: "event_note",
+          text: "캘린더",
+          route: "/calendar",
+          show: true
+        },
+        {
           icon: "explore",
           text: "탐색",
           route: "/explorer",

@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
 import Timeline from "./views/Timeline.vue";
+import Calendar from "./views/Calendar.vue";
 import Explorer from "./views/Explorer.vue";
 import Detail from "./views/Detail.vue";
 import Ask from "./views/Ask.vue";
@@ -46,6 +47,11 @@ export default new Router({
       path: "/timeline",
       name: "timeline",
       component: Timeline
+    },
+    {
+      path: "/calendar",
+      name: "calendar",
+      component: Calendar
     },
     {
       path: "/explorer",
