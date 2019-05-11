@@ -2,7 +2,11 @@
   <v-layout>
     <v-flex>
       <v-sheet height="500">
-        <v-calendar now="2019-05-09" value="2019-05-09" color="primary">
+        <v-calendar
+          :now="today.format('YYYY-MM-DD')"
+          :value="today.format('YYYY-MM-DD')"
+          color="primary"
+        >
           <template v-slot:day="{ date }">
             <template v-for="item in tasksMap[date]">
               <v-menu :key="item['.key']" v-model="item.open" full-width offset-x>
@@ -63,7 +67,13 @@ export default {
     return {
       tasks: db
         .collection("TASK")
-        .where("date", ">=", this.today.startOf("month").format("YYYY-MM-DD"))
+        .where(
+          "date",
+          ">=",
+          moment()
+            .startOf("month")
+            .format("YYYY-MM-DD")
+        )
         .orderBy("date")
         .orderBy("time")
     };
