@@ -112,6 +112,7 @@
         </v-select>
         <v-text-field v-model="castText" label="MC/출연자(기타)" required></v-text-field>
         <v-text-field v-model="castTextConcat" label="MC/출연자(저장양식)" readonly box required></v-text-field>
+        <v-text-field v-model="vodLink" label="다시보기 링크" required></v-text-field>
         <v-list-tile avatar>
           <v-spacer/>
           <v-spacer/>
@@ -190,6 +191,7 @@ export default {
       update_name: "",
       document: null,
       change_reason: "",
+      vodLink: "",
       revs: [],
       rev: null,
       loadingSave: false,
@@ -224,6 +226,7 @@ export default {
           this.update_dt = document.update_dt;
           this.update_photoURL = document.update_photoURL;
           this.update_name = document.update_name;
+          this.vodLink = document.vodLink;
           this.document = document;
         })
         .catch(err => {
@@ -316,6 +319,7 @@ export default {
       this.desc = this.rev.desc;
       this.cast = this.rev.cast;
       this.castText = this.rev.castText;
+      this.vodLink = this.rev.vodLink;
       this.chips = this.rev.chips;
       this.broadcastType = this.rev.broadcastType;
       this.create_dt = this.rev.create_dt;
@@ -342,6 +346,7 @@ export default {
         broadcastType: this.broadcastType,
         color: this.broadcastType.color,
         castText: this.castText,
+        vodLink: this.vodLink,
         create_dt: new Date(),
         create_uid: this.$store.getters["uid"],
         create_photoURL: this.$store.getters["photoURL"],
@@ -394,6 +399,7 @@ export default {
         broadcastType: this.broadcastType,
         color: this.broadcastType.color,
         castText: this.castText,
+        vodLink: this.vodLink,
         update_dt: new Date(),
         update_uid: this.$store.getters["uid"],
         update_photoURL: this.$store.getters["photoURL"],

@@ -40,6 +40,12 @@
                   </v-card-title>
 
                   <v-card-actions>
+                    <v-btn
+                      v-if="item.vodLink"
+                      flat
+                      color="primary"
+                      @click="goVodLink(item.vodLink)"
+                    >다시보기</v-btn>
                     <v-btn flat color="secondary">Cancel</v-btn>
                   </v-card-actions>
                 </v-card>
@@ -98,6 +104,9 @@ export default {
   methods: {
     goDetail(id) {
       this.$router.push("/task/" + id);
+    },
+    goVodLink(link) {
+      window.open(link, "_blank");
     },
     open(event) {
       alert(event.title);
