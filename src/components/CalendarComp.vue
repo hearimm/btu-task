@@ -11,15 +11,10 @@
             <template v-for="item in tasksMap[date]">
               <v-menu :key="item['.key']" v-model="item.open" full-width offset-x>
                 <template v-slot:activator="{ on }">
-                  <v-btn
-                    :color="item.color"
-                    depressed
-                    dark
-                    small
-                    block
-                    round
-                    v-on="on"
-                  >{{item.title}}</v-btn>
+                  <v-btn :color="item.color" depressed dark small block round v-on="on">
+                    {{item.title}}
+                    <v-icon v-if="item.vodLink" small>tv</v-icon>
+                  </v-btn>
                 </template>
                 <v-card color="grey lighten-4" min-width="350px" flat>
                   <v-toolbar :color="item.color" dark dense>
