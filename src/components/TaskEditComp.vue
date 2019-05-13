@@ -226,7 +226,7 @@ export default {
           this.update_dt = document.update_dt;
           this.update_photoURL = document.update_photoURL;
           this.update_name = document.update_name;
-          this.vodLink = document.vodLink;
+          this.vodLink = document.vodLink ? document.vodLink : null;
           this.document = document;
         })
         .catch(err => {
