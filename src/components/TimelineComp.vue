@@ -36,11 +36,12 @@
                 <v-btn
                   v-if="task.vodLink"
                   flat
+                  small
                   icon
                   color="primary"
                   @click="goVodLink(task.vodLink)"
                 >
-                  <v-icon small>tv</v-icon>
+                  <v-icon>tv</v-icon>
                 </v-btn>
               </strong>
               <div class="caption">{{task.desc}}</div>
