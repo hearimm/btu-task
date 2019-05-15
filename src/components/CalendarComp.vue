@@ -6,6 +6,7 @@
           :now="today.format('YYYY-MM-DD')"
           :value="today.format('YYYY-MM-DD')"
           color="primary"
+          @click:date="goDateTimeline($event)"
         >
           <template v-slot:day="{ date }">
             <template v-for="item in tasksMap[date]">
@@ -105,6 +106,16 @@ export default {
     },
     open(event) {
       alert(event.title);
+    },
+    goDateTimeline(item) {
+      // var t1 = moment(item.date);
+      // var t2 = moment(this.today.format("YYYY-MM-DD"));
+      // var days = moment.duration(t2.diff(t1)).asDays();
+      // var addDays = Math.trunc(days) * -1;
+      this.$router.push({
+        name: "timelineQuery",
+        params: { date: item.date }
+      });
     }
   }
 };

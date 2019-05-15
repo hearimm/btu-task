@@ -31,7 +31,18 @@
               <strong>{{task.time}}</strong>
             </v-flex>
             <v-flex>
-              <strong>{{task.title}}</strong>
+              <strong>
+                {{task.title}}
+                <v-btn
+                  v-if="task.vodLink"
+                  flat
+                  icon
+                  color="primary"
+                  @click="goVodLink(task.vodLink)"
+                >
+                  <v-icon small>tv</v-icon>
+                </v-btn>
+              </strong>
               <div class="caption">{{task.desc}}</div>
               <div class="caption">{{task.cast}}</div>
             </v-flex>
@@ -132,6 +143,9 @@ export default {
         name: "taskAdd",
         params: { pDate: this.$data.today.format("YYYY-MM-DD") }
       });
+    },
+    goVodLink(link) {
+      window.open(link, "_blank");
     }
   }
 };
