@@ -166,6 +166,7 @@ export default {
           "<=",
           moment(this.today)
             .endOf("month")
+            .add(7, "days")
             .format("YYYY-MM-DD")
         )
         .orderBy("date")
@@ -199,6 +200,7 @@ export default {
           "<=",
           moment(this.today)
             .endOf("month")
+            .add(7, "days")
             .format("YYYY-MM-DD")
         )
         .orderBy("date")
