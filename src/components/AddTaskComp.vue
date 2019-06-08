@@ -83,6 +83,7 @@
 
 <script>
 import { db } from "../firebase";
+import {commonAllowedStep} from "../common";
 export default {
   props: ["id"],
   data() {
@@ -131,7 +132,7 @@ export default {
   },
 
   methods: {
-    allowedStep: m => m % 10 === 0,
+    allowedStep: commonAllowedStep,
     save() {
       this.$firestore.tasks
         .add({

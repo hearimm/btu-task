@@ -179,7 +179,6 @@ export default {
   },
 
   methods: {
-    allowedStep: m => m % 10 === 0,
     isPermission(uid) {
       return this.$store.getters["uid"] === uid;
     },

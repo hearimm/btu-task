@@ -131,6 +131,7 @@
 
 <script>
 import { db } from "../firebase";
+import {commonAllowedStep} from "../common";
 import moment from "moment";
 import shared from "../shared";
 
@@ -254,7 +255,7 @@ export default {
   },
 
   methods: {
-    allowedStep: m => m % 10 === 0,
+    allowedStep: commonAllowedStep,
     remove(item) {
       this.chips.splice(this.chips.indexOf(item), 1);
       this.chips = [...this.chips];

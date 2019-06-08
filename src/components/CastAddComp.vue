@@ -49,7 +49,6 @@ export default {
   },
 
   methods: {
-    allowedStep: m => m % 10 === 0,
     save() {
       this.$firestore.casts
         .add({

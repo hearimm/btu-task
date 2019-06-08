@@ -70,7 +70,6 @@ export default {
   },
 
   methods: {
-    allowedStep: m => m % 10 === 0,
     cancel() {
       this.$router.go(-1);
     },

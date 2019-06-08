@@ -55,7 +55,6 @@ export default {
   },
 
   methods: {
-    allowedStep: m => m % 10 === 0,
     save() {
       this.loadingSave = true;
       this.$firestore.askCollection

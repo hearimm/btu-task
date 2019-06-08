@@ -61,6 +61,7 @@
 
 <script>
 import { db } from "../firebase";
+
 export default {
   props: ["askId", "answerId"],
   data() {
@@ -134,7 +135,6 @@ export default {
   },
 
   methods: {
-    allowedStep: m => m % 10 === 0,
     addAskComment() {
       console.log("newAddAskComment");
     },
