@@ -112,11 +112,11 @@ export default {
       const imgMap = new Map();
       imgMap.set(
         "1",
-        "https://scontent-icn1-1.cdninstagram.com/vp/33bb00bd8b055f8ade9a70a0c90f8161/5D4196F1/t51.2885-15/e35/56553780_2234820109909089_2768817975000366823_n.jpg?_nc_ht=scontent-icn1-1.cdninstagram.com"
+        "https://scontent-icn1-1.cdninstagram.com/vp/087bc151f6277a63355b143c166ad394/5DD48705/t51.2885-15/e35/66504670_3404591962899694_8742569714826371016_n.jpg?_nc_ht=scontent-icn1-1.cdninstagram.com"
       );
       imgMap.set(
         "2",
-        "https://scontent-icn1-1.cdninstagram.com/vp/7ae66a5dbcfb3e0bcafc253ec4372864/5D3F737F/t51.2885-15/e35/56319305_338618956787935_3099377071353244562_n.jpg?_nc_ht=scontent-icn1-1.cdninstagram.com"
+        "https://scontent-icn1-1.cdninstagram.com/vp/ec31a39c596b4f66d30c1c29b3f43cff/5E11F4A6/t51.2885-15/e35/57326295_295522308027225_4761856038825118039_n.jpg?_nc_ht=scontent-icn1-1.cdninstagram.com"
       );
       imgMap.set(
         "4",
@@ -124,7 +124,7 @@ export default {
       );
       imgMap.set(
         "6",
-        "https://scontent-icn1-1.cdninstagram.com/vp/2d3be816658336420cab170bc94f4cd9/5D3B6625/t51.2885-15/e35/59390479_327928747761576_3785550564376759797_n.jpg?_nc_ht=scontent-icn1-1.cdninstagram.com"
+        "https://scontent-icn1-1.cdninstagram.com/vp/f9cf1ccc184d165c19adf5abcd2450e8/5DD99A25/t51.2885-15/e35/59390479_327928747761576_3785550564376759797_n.jpg?_nc_ht=scontent-icn1-1.cdninstagram.com"
       );
 
       const week = moment()
@@ -133,7 +133,7 @@ export default {
       if (imgMap.get(week)) {
         return imgMap.get(week);
       } else {
-        return "https://scontent-icn1-1.cdninstagram.com/vp/9a16ada2873f1f03f1fa8e1bf111378b/5D30E1C0/t51.2885-15/e35/56213822_1208424909319716_1133603525999068246_n.jpg?_nc_ht=scontent-icn1-1.cdninstagram.com";
+        return "https://scontent-icn1-1.cdninstagram.com/vp/eb66964bf3a1d8c58daf7483a14bffb6/5DF6A2C0/t51.2885-15/e35/56213822_1208424909319716_1133603525999068246_n.jpg?_nc_ht=scontent-icn1-1.cdninstagram.com";
       }
     }
   },
